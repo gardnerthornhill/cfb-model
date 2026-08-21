@@ -79,33 +79,65 @@ def run(season: int | None = None, week: int | None = None,
 
     P = pd.DataFrame({
         "id": target["id"].values,
-        "start_date": target["start_date"].values,
+        "kickoff_utc": target["start_date"].values,
         "season": season,
         "week": week,
-        "home_team": target["home_team"].values,
         "away_team": target["away_team"].values,
+        "home_team": target["home_team"].values,
         "neutral_site": target["neutral_site"].values,
         "conference_game": target["conference_game"].values,
         **out,
     })
     P = P.merge(market_lines(), on="id", how="left")
     P = P.rename(columns={"spread_home": "market_spread_home", "over_under": "market_total"})
-    P["model_spread_home"] = -P["pred_margin"]          # negative = home favored
-    P["edge_home_vs_spread"] = P["pred_margin"] + P["market_spread_home"]
-    P["model_side"] = np.where(P["market_spread_home"].isna(), "",
-                               np.where(P["edge_home_vs_spread"] > 0, "home", "away"))
-    P["p_home_win"] = P["p_home_win"].round(3)
-    for c in ("pred_margin", "pred_total", "model_spread_home", "edge_home_vs_spread"):
+
+    # Spread convention: negative = home team favored (same as sportsbooks).
+    P["model_spread_home"] = -P["pred_margin"]
+    # Delta vs market in points: positive = model favors the HOME side more
+    # than the market, negative = model favors the AWAY side. Bigger |delta|
+    # = bigger disagreement = the interesting games. Sort by this column.
+    P["model_market_delta"] = P["market_spread_home"] - P["model_spread_home"]
+    P["model_pick_ats"] = np.where(P["market_spread_home"].isna(), "",
+                                   np.where(P["model_market_delta"] > 0,
+                                            P["home_team"], P["away_team"]))
+    # Total delta: positive = lean over, negative = lean under.
+    P["model_market_total_delta"] = P["pred_total"] - P["market_total"]
+
+    P = P.rename(columns={
+        "pred_total": "model_total",
+        "pred_home_score": "proj_home_score",
+        "pred_away_score": "proj_away_score",
+        "p_home_win": "home_win_prob",
+    })
+    P["home_win_prob"] = P["home_win_prob"].round(3)
+    for c in ("model_spread_home", "model_market_delta", "model_total",
+              "market_spread_home", "market_total", "model_market_total_delta"):
         P[c] = P[c].round(1)
-    P = P.sort_values(["start_date", "home_team"]).reset_index(drop=True)
+
+    OUT_COLS = [
+        "kickoff_utc", "season", "week", "away_team", "home_team",
+        "neutral_site", "conference_game",
+        "market_spread_home", "model_spread_home", "model_market_delta",
+        "model_pick_ats",
+        "market_total", "model_total", "model_market_total_delta",
+        "home_win_prob", "proj_home_score", "proj_away_score",
+    ]
+    P = P.sort_values(["kickoff_utc", "home_team"]).reset_index(drop=True)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     fp = OUT_DIR / f"predictions_{season}_w{week}.csv"
-    P.drop(columns=["id"]).to_csv(fp, index=False)
+    P[OUT_COLS].to_csv(fp, index=False)
     print(f"\n=== {season} WEEK {week}: {len(P)} games -> {fp.name} ===")
-    cols = ["start_date", "away_team", "home_team", "market_spread_home",
-            "model_spread_home", "pred_total", "p_home_win", "model_side"]
+    cols = ["kickoff_utc", "away_team", "home_team", "market_spread_home",
+            "model_spread_home", "model_market_delta", "model_pick_ats",
+            "model_total", "home_win_prob"]
     print(P[cols].to_string(index=False))
+    big = P[P["model_market_delta"].abs() >= 7].sort_values("model_market_delta")
+    if len(big):
+        print(f"\nbiggest disagreements with market (|delta| >= 7): {len(big)}")
+        print(big[["away_team", "home_team", "market_spread_home",
+                   "model_spread_home", "model_market_delta", "model_pick_ats"]]
+              .to_string(index=False))
     return P
 
 

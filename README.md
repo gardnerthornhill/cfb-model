@@ -52,10 +52,16 @@ python -m cfb_model.predict --no-refresh
 ```
 
 `predict` force-refreshes current-season games/lines/stats, retrains on every
-completed game, and writes `predictions_<season>_w<week>.csv` with kickoff,
-market spread/total, model spread/total, predicted scores, win probability,
-and the model's side vs the spread (`model_side`). Spread convention:
-negative = home team favored.
+completed game, and writes `predictions_<season>_w<week>.csv`. Columns:
+
+| Column | Meaning |
+|---|---|
+| `market_spread_home` / `model_spread_home` | spread from the home team's view; **negative = home favored** |
+| **`model_market_delta`** | **model spread − market spread, in points. Positive → model favors the HOME side, negative → AWAY side. Sort by this (desc or asc) to find the biggest model/market disagreements.** |
+| `model_pick_ats` | the team the model likes against the spread |
+| `market_total` / `model_total` / `model_market_total_delta` | totals; delta positive → lean over |
+| `home_win_prob` | model win probability for the home team |
+| `proj_home_score` / `proj_away_score` | projected final scores |
 
 Everything runs locally — GitHub Actions (below) is optional automation.
 
