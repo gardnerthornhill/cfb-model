@@ -17,7 +17,8 @@ from .config import OUT_DIR
 from .data import cfbd
 from .backtest.walk_forward import load_training_frame, market_lines
 from .features.build import FEATURE_COLS, build_all
-from .models.train import fit_pair, predict_scores
+from .models.train import (apply_linear_prior, fit_linear_prior, fit_pair,
+                           predict_scores)
 
 
 def refresh_season(season: int):
@@ -69,10 +70,12 @@ def run(season: int | None = None, week: int | None = None,
     Xtr = train[FEATURE_COLS].to_numpy(dtype=np.float32)
     ym = train["margin"].to_numpy(dtype=np.float32)
     yt = train["total"].to_numpy(dtype=np.float32)
-    models = fit_pair(Xtr, ym, yt, valid_slice=slice(int(len(Xtr) * 0.94), None))
+    lin = fit_linear_prior(train, train["margin"].to_numpy(dtype=np.float64))
+    ym_resid = ym - apply_linear_prior(lin, train).astype(np.float32)
+    models = fit_pair(Xtr, ym_resid, yt, valid_slice=slice(int(len(Xtr) * 0.94), None))
 
     X = target[FEATURE_COLS].to_numpy(dtype=np.float32)
-    out = predict_scores(models, X)
+    out = predict_scores(models, X, margin_add=apply_linear_prior(lin, target))
 
     P = pd.DataFrame({
         "id": target["id"].values,

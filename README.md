@@ -96,6 +96,16 @@ data_store/            parquet cache, feature table, outputs (mostly gitignored)
 
 - Every feature is computed only from games that finished before kickoff; the
   backtest retrains on a strictly expanding window.
-- Ratings: margin-of-victory Elo (offseason regression toward mean) plus a
-  multi-year weighted ridge regression of margins on team indicators.
+- Ratings: margin-of-victory Elo (offseason regression toward a division anchor)
+  plus a multi-year weighted ridge regression of margins on team indicators with
+  explicit FCS priors. FCS-vs-FCS games never update ratings — they carry no
+  information about the FBS scale.
+- The margin model is hybrid: a linear ridge prior over the rating diffs (SP+,
+  ridge rating, Elo) captures the full range of matchup quality (GBM leaf
+  averages alone compress extreme margins), and LightGBM learns corrections
+  on top of the prior's residuals.
+- Missing SP+/talent (FCS, new-FBS programs) is left as NaN with explicit
+  flags — imputing league-average values made weak teams look average.
+- Unplayed games inherit each team's most recent rolling-stat snapshot, so
+  week-0/1 predictions have the same feature coverage as mid-season games.
 - Win probability comes from a normal CDF on predicted margin (sigma = 17).
