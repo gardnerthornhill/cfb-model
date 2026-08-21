@@ -1,0 +1,6 @@
+.env
+data_store/*
+!data_store/out/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

@@ -1,0 +1,8 @@
+requests>=2.32
+pandas>=2.2
+numpy>=2.0
+pyarrow>=17
+scipy>=1.14
+scikit-learn>=1.5
+lightgbm>=4.5
+python-dotenv>=1.0

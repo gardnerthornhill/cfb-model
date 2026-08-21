@@ -1,0 +1,61 @@
+name: weekly-update
+
+on:
+  schedule:
+    # Tuesdays 14:00 UTC (10:00 ET) — after weekend games, before Saturday kickoffs
+    - cron: "0 14 * * 2"
+  workflow_dispatch: {}
+
+concurrency:
+  group: cfb-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore data store
+        uses: actions/cache@v4
+        with:
+          path: data_store
+          key: cfb-data-${{ github.run_id }}
+          restore-keys: cfb-data-
+
+      - name: Refresh data, rebuild features, backtest, predict
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: |
+          python -m cfb_model.download
+          python -m cfb_model.features.build
+          python -m cfb_model.backtest.walk_forward
+          python -m cfb_model.predict
+
+      - name: Upload predictions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-predictions
+          path: data_store/out/*.csv
+          if-no-files-found: error
+
+      - name: Commit updated outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data_store/out
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "weekly predictions $(date -u +%F)"
+            git push
+          fi
