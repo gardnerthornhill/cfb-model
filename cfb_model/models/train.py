@@ -1,8 +1,37 @@
-"""Gradient boosting margin/total models with time-ordered early stopping."""
+"""Gradient boosting margin/total models with time-ordered early stopping.
+
+Margin model is hybrid: a linear ridge prior on the rating diffs (SP+, ridge
+rating, Elo) captures the full dynamic range of matchup quality — pure GBMs
+compress extreme margins because leaf averages cannot extrapolate — and the
+GBM learns corrections on top of that prior's residuals.
+"""
 import numpy as np
+import pandas as pd
 from lightgbm import LGBMRegressor, early_stopping, log_evaluation
 
 from ..config import LGB_PARAMS
+
+PRIOR_COLS = ["sp_prior_diff", "adj_margin_diff", "elo_diff"]
+ELO_TO_PTS = 1.0 / 12.0  # ~400 Elo gap ~= 33 pts
+
+
+def _prior_matrix(df: pd.DataFrame) -> np.ndarray:
+    X = df[PRIOR_COLS].copy()
+    X["elo_diff"] = X["elo_diff"] * ELO_TO_PTS
+    X = X.fillna(0.0)  # missing ratings contribute nothing; flags carry the signal
+    X.insert(0, "home_adv", 1.0)
+    return X.to_numpy(dtype=np.float64)
+
+
+def fit_linear_prior(df: pd.DataFrame, y: np.ndarray):
+    from sklearn.linear_model import Ridge
+    m = Ridge(alpha=50.0, fit_intercept=False)
+    m.fit(_prior_matrix(df), y)
+    return m
+
+
+def apply_linear_prior(m, df: pd.DataFrame) -> np.ndarray:
+    return m.predict(_prior_matrix(df))
 
 
 def _fit(X, y, valid=None):
@@ -36,10 +65,13 @@ def fit_pair(X, y_margin, y_total, valid_slice=None):
     return margin_model, total_model
 
 
-def predict_scores(models, X, win_sigma=17.0):
-    """Returns dict with pred_margin, pred_total, home/away scores, win prob."""
+def predict_scores(models, X, win_sigma=17.0, margin_add=None):
+    """Returns dict with pred_margin, pred_total, home/away scores, win prob.
+    margin_add (linear prior) is added before deriving scores/probabilities."""
     mm, tm = models
     margin = mm.predict(X)
+    if margin_add is not None:
+        margin = margin + margin_add
     total = np.clip(tm.predict(X), 20.0, 120.0)
     from scipy.stats import norm
     p_home = norm.cdf(margin / win_sigma)

@@ -30,13 +30,20 @@ ELO_REGRESS = 0.33           # fraction regressed to mean each offseason
 # Ridge schedule-adjusted margin rating
 RIDGE_LAMBDA = 8.0
 
+# Cross-division anchors. Historical mean FBS-FCS margin is ~+30 pts; without
+# an explicit anchor, FCS ratings are set almost entirely by FCS-vs-FCS games
+# and drift to "average FBS", wrecking early-season matchup gaps.
+FCS_ELO_ANCHOR = 1100.0      # Elo regression target for FCS teams (FBS: 1500)
+FCS_RIDGE_PRIOR = -30.0      # ridge prior mean for FCS teams, in points
+FCS_PRIOR_WEIGHT = 20.0      # pseudo-game weight of that prior in the ridge solve
+
 # LightGBM
 LGB_PARAMS = dict(
     objective="regression",
-    metric="l1",
-    learning_rate=0.02,
-    num_leaves=31,
-    min_child_samples=60,
+    metric="l2",
+    learning_rate=0.03,
+    num_leaves=63,
+    min_child_samples=20,
     subsample=0.8,
     subsample_freq=1,
     colsample_bytree=0.8,

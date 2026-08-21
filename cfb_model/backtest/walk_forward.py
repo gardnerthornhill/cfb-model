@@ -11,7 +11,8 @@ import pandas as pd
 
 from ..config import DATA_DIR, REFIT_EVERY_WEEKS, TEST_SEASONS
 from ..features.build import FEATURE_COLS
-from ..models.train import fit_pair, predict_scores
+from ..models.train import (apply_linear_prior, fit_linear_prior, fit_pair,
+                            predict_scores)
 
 
 def load_training_frame(min_season=2014):
@@ -59,13 +60,16 @@ def run(test_seasons=None, verbose=True):
             Xtr = train[X_cols].to_numpy(dtype=np.float32)
             ym = train["margin"].to_numpy(dtype=np.float32)
             yt = train["total"].to_numpy(dtype=np.float32)
+            lin = fit_linear_prior(train, train["margin"].to_numpy(dtype=np.float64))
+            ym_resid = ym - apply_linear_prior(lin, train).astype(np.float32)
             tail = slice(int(len(Xtr) * 0.94), None)
-            models = fit_pair(Xtr, ym, yt, valid_slice=tail)
+            models = (fit_pair(Xtr, ym_resid, yt, valid_slice=tail), lin)
             last_fit_key = (season, week)
             fit_season = season
 
         X = grp[X_cols].to_numpy(dtype=np.float32)
-        out = predict_scores(models, X)
+        out = predict_scores(models[0], X,
+                             margin_add=apply_linear_prior(models[1], grp))
         p = pd.DataFrame({
             "id": grp["id"].values, "season": season, "week": week,
             "home_team": grp["home_team"].values, "away_team": grp["away_team"].values,
@@ -129,6 +133,14 @@ def _report(P: pd.DataFrame, verbose=True):
             print(f"model margin MAE               : {fbs_line['margin_err'].mean():.2f}")
             print(f"line margin MAE                : {fbs_line['line_margin_err'].mean():.2f}")
             print("note: CFBD lines are opening/consensus (soft); ATS here is an upper bound.")
+
+        fcs_games = P[(P["vs_fcs_h"] == 1) | (P["vs_fcs_a"] == 1)]
+        if len(fcs_games):
+            print("\n=== FBS vs FCS games ===")
+            print(f"games: {len(fcs_games)}  "
+                  f"MAE: {fcs_games['margin_err'].mean():.2f}  "
+                  f"bias: {(fcs_games['pred_margin'] - fcs_games['actual_margin']).mean():+.2f}  "
+                  f"win_acc: {fcs_games['model_win_hit'].mean():.3f}")
     return agg(P)
 
 

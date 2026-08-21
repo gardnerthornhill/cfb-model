@@ -7,7 +7,7 @@ averages shifted by one game, prior-season SP+/talent priors, rest, travel.
 import numpy as np
 import pandas as pd
 
-from ..config import DATA_DIR
+from ..config import DATA_DIR, FCS_RIDGE_PRIOR
 from .ratings import EloEngine, RidgeRatings
 
 FEATURE_COLS = [
@@ -22,6 +22,7 @@ FEATURE_COLS = [
     "rest_h", "rest_a", "opener_h", "opener_a", "bye_h", "bye_a",
     "travel_away", "neutral_site", "conference_game", "week",
     "games_played_h", "games_played_a", "vs_fcs_h", "vs_fcs_a",
+    "fcs_h", "fcs_a", "sp_miss_h", "sp_miss_a", "talent_miss_h", "talent_miss_a",
 ]
 
 
@@ -48,8 +49,12 @@ def load_games() -> pd.DataFrame:
 def add_ratings(g: pd.DataFrame) -> tuple[pd.DataFrame, dict, dict]:
     """Elo pass + ridge snapshots. Returns games with elo cols, ridge snapshots,
     and final rating dicts (for future-week prediction)."""
-    elo = EloEngine()
+    fcs_h = set(g.loc[g["home_classification"] == "fcs", "home_id"].astype(int))
+    fcs_a = set(g.loc[g["away_classification"] == "fcs", "away_id"].astype(int))
+    fcs_teams = fcs_h | fcs_a
+    elo = EloEngine(fcs_teams=fcs_teams)
     ridge = RidgeRatings()
+    fcs_prior = {t: FCS_RIDGE_PRIOR for t in fcs_teams}
     elo_h = np.full(len(g), np.nan)
     elo_a = np.full(len(g), np.nan)
     adj_h = np.full(len(g), np.nan)
@@ -63,6 +68,10 @@ def add_ratings(g: pd.DataFrame) -> tuple[pd.DataFrame, dict, dict]:
     done = g[g["completed"] & g["margin"].notna()]
     done_pos = set(done.index)
 
+    def both_fcs(row):
+        return (row.get("home_classification") == "fcs"
+                and row.get("away_classification") == "fcs")
+
     for i, row in g.iterrows():
         season, week = int(row["season"]), int(row["week"])
         k = f"{season}_{week}"
@@ -71,13 +80,16 @@ def add_ratings(g: pd.DataFrame) -> tuple[pd.DataFrame, dict, dict]:
             if cur_season is not None and season != cur_season:
                 cur = []
             cur_season = season
-            snapshots[k] = ridge.solve(season, cur)
+            snapshots[k] = ridge.solve(season, cur, prior=fcs_prior)
         rh, ra = elo.pregame(int(row["home_id"]), int(row["away_id"]))
         elo_h[i], elo_a[i] = rh, ra
         snap = snapshots[k]
         adj_h[i] = snap.get(int(row["home_id"]), np.nan)
         adj_a[i] = snap.get(int(row["away_id"]), np.nan)
-        if i in done_pos:
+        if i in done_pos and not both_fcs(row):
+            # FCS-vs-FCS games are excluded from rating updates: they carry no
+            # information about the FBS scale, and letting them vote lets FCS
+            # teams cluster around average-FBS ratings.
             m = float(row["margin"])
             elo.update(int(row["home_id"]), int(row["away_id"]), m)
             ridge.add_game(season, int(row["home_id"]), int(row["away_id"]), m)
@@ -85,7 +97,7 @@ def add_ratings(g: pd.DataFrame) -> tuple[pd.DataFrame, dict, dict]:
                 cur.append((int(row["home_id"]), int(row["away_id"]), m))
 
     # final ratings for predicting upcoming weeks
-    final_snap = ridge.solve(cur_season or 0, cur)
+    final_snap = ridge.solve(cur_season or 0, cur, prior=fcs_prior)
     g = g.copy()
     g["elo_home_pre"] = elo_h
     g["elo_away_pre"] = elo_a
@@ -174,7 +186,35 @@ def add_rolling_features(g: pd.DataFrame) -> pd.DataFrame:
 
     tcols = ["id", "team_id"] + [f"std_{m}" for m in met] + [f"l3_{m}" for m in met] + \
             [f"ps_{m}" for m in met] + ["games_before", "days_since_prev", "season_opener"]
+    full = T  # pre-trim copy retains date/season for the synthetic-row step
     T = T[tcols]
+
+    # Unplayed (future) games have no stats row, so they'd otherwise lose every
+    # stat feature. Give each team's next game the state of its most recent
+    # played game: rolling means already shifted by one game, so they describe
+    # exactly "form through last game played" — the correct causal snapshot.
+    fut = g[~g["completed"]]
+    if len(fut):
+        fl = pd.concat([
+            fut[["id", "season", "start_date", "home_id"]].rename(columns={"home_id": "team_id"}),
+            fut[["id", "season", "start_date", "away_id"]].rename(columns={"away_id": "team_id"}),
+        ], ignore_index=True)
+        fl["team_id"] = fl["team_id"].astype(int)
+        base = full.sort_values("date").groupby("team_id").tail(1)
+        b = base[["team_id"] + tcols[2:] + ["date", "season"]].rename(
+            columns={"date": "last_date", "season": "last_season"})
+        fl = fl.merge(b, on="team_id", how="inner")
+        fl["games_before"] = fl["games_before"] + 1
+        fl["days_since_prev"] = (fl["start_date"] - fl["last_date"]).dt.days
+        fl["season_opener"] = fl["season"] != fl["last_season"]
+        fl["prev_season"] = fl["last_season"]
+        # ps_* on the base row describe its *previous* season; for the synthetic
+        # row the prior season is the base row's own season, so re-merge.
+        fl = fl.drop(columns=[c for c in fl.columns if c.startswith("ps_")])
+        fl = fl.merge(agg, left_on=["team_id", "prev_season"],
+                      right_on=["team_id", "season"], suffixes=("", "_agg"), how="left")
+        Ts = fl[tcols]
+        T = pd.concat([T, Ts], ignore_index=True)
 
     h = T.rename(columns={c: f"{c}_h" for c in tcols[2:]})
     a = T.rename(columns={c: f"{c}_a" for c in tcols[2:]})
@@ -208,7 +248,7 @@ def add_priors(g: pd.DataFrame) -> pd.DataFrame:
     sp = sp.dropna(subset=["team_id"])
 
     def talent_for(team_id, season):
-        for y in (season, season - 1):
+        for y in range(season, 2003, -1):  # carry forward most recent available
             v = tal_map.get((y, team_id))
             if v is not None:
                 return v
@@ -220,7 +260,7 @@ def add_priors(g: pd.DataFrame) -> pd.DataFrame:
     spi = sp.set_index(["year", "team_id"])[["rating", "offense_rating", "defense_rating"]]
 
     def sp_for(team_id, season):
-        for y in (season - 1, season):  # prior-season SP+ is the preseason prior
+        for y in range(season - 1, 2013, -1):  # prior-season SP+; carry forward if gap
             try:
                 row = spi.loc[(y, team_id)]
                 return float(row.iloc[0]), float(row.iloc[1]), float(row.iloc[2])
@@ -234,17 +274,18 @@ def add_priors(g: pd.DataFrame) -> pd.DataFrame:
                        columns=["sp_r_a", "sp_o_a", "sp_d_a"], index=g.index)
     g = pd.concat([g, sph, spa], axis=1)
 
-    league_talent = g["talent_home"].expanding().mean()
-    lt = league_talent.groupby(g["season"]).transform("first")
-    for side in ("home", "away"):
-        g[f"talent_{side}"] = g[f"talent_{side}"].fillna(lt)
+    # No imputation: FCS / new-FBS teams have no SP+ or talent data, and
+    # filling that with league-average values told the model they were average
+    # FBS teams. Missing stays NaN (trees route missing splits natively) and
+    # explicit flags make the gap learnable.
+    g["talent_miss_h"] = g["talent_home"].isna().astype(float)
+    g["talent_miss_a"] = g["talent_away"].isna().astype(float)
     g["talent_diff"] = g["talent_home"] - g["talent_away"]
+    g["sp_miss_h"] = g["sp_r_h"].isna().astype(float)
+    g["sp_miss_a"] = g["sp_r_a"].isna().astype(float)
     for col, hcol, acol in (("sp_prior_diff", "sp_r_h", "sp_r_a"),
                             ("sp_prior_off_diff", "sp_o_h", "sp_o_a"),
                             ("sp_prior_def_diff", "sp_d_h", "sp_d_a")):
-        lg = g[hcol].groupby(g["season"]).transform("median")
-        g[hcol] = g[hcol].fillna(lg)
-        g[acol] = g[acol].fillna(lg)
         g[col] = g[hcol] - g[acol]
     return g
 
@@ -284,6 +325,8 @@ def add_travel_rest_context(g: pd.DataFrame) -> pd.DataFrame:
     cls_a = g.get("away_classification")
     g["vs_fcs_h"] = (cls_a == "fcs").astype(float)
     g["vs_fcs_a"] = (cls_h == "fcs").astype(float)
+    g["fcs_h"] = (cls_h == "fcs").astype(float)
+    g["fcs_a"] = (cls_a == "fcs").astype(float)
 
     g["games_played_h"] = g["games_before_h"]
     g["games_played_a"] = g["games_before_a"]
