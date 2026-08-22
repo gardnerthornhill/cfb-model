@@ -71,9 +71,9 @@ def talent(season: int) -> pd.DataFrame:
     return fetch_cached(f"talent_{season}", "/talent", {"year": season})
 
 
-def sp_ratings(season: int) -> pd.DataFrame:
+def sp_ratings(season: int, force: bool = False) -> pd.DataFrame:
     try:
-        return fetch_cached(f"sp_{season}", "/ratings/sp", {"year": season})
+        return fetch_cached(f"sp_{season}", "/ratings/sp", {"year": season}, force=force)
     except Exception:
         return pd.DataFrame()
 

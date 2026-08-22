@@ -56,7 +56,7 @@ def run():
     talent = [cfbd.talent(y) for y in seasons]
     _consolidate("talent", talent, "talent_all.parquet")
 
-    sp = [cfbd.sp_ratings(y) for y in range(2014, 2026)]
+    sp = [cfbd.sp_ratings(y) for y in range(2014, 2027)]
     _consolidate("sp+", sp, "sp_all.parquet")
 
     ln = [cfbd.lines(y) for y in range(2013, 2027)]

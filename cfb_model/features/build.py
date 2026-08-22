@@ -259,8 +259,16 @@ def add_priors(g: pd.DataFrame) -> pd.DataFrame:
 
     spi = sp.set_index(["year", "team_id"])[["rating", "offense_rating", "defense_rating"]]
 
+    max_sp_year = int(sp["year"].max())
+
     def sp_for(team_id, season):
-        for y in range(season - 1, 2013, -1):  # prior-season SP+; carry forward if gap
+        # For the live season, the current-year SP+ file is Connelly's PRESEASON
+        # ratings (published before week 1; prices in coaching changes, portal,
+        # returning production) — the best causal signal available, so prefer it.
+        # For historical seasons the same-year file is END-OF-SEASON ratings and
+        # using it would leak future results, so only prior seasons are used.
+        start = season if season == max_sp_year else season - 1
+        for y in range(start, 2013, -1):
             try:
                 row = spi.loc[(y, team_id)]
                 return float(row.iloc[0]), float(row.iloc[1]), float(row.iloc[2])
