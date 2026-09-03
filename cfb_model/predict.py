@@ -27,6 +27,7 @@ def refresh_season(season: int):
     print(f"refreshing {season} games/lines/stats from CFBD ...")
     cfbd.games(season, force=True)
     cfbd.lines(season, force=True)
+    cfbd.sp_ratings(season, force=True)  # preseason -> in-season updated ratings
     for w in range(21):
         try:
             cfbd.fetch_cached(f"stats_{season}_w{w}", "/games/teams",
