@@ -173,7 +173,7 @@ def add_rolling_features(g: pd.DataFrame) -> pd.DataFrame:
         grp["games_before"] = range(len(grp))
         grp["days_since_prev"] = grp["date"].diff().dt.days
         grp["season_opener"] = grp["season"] != grp["season"].shift(1)
-        grp["prev_season"] = grp["season"].shift(1)
+        grp["prev_season"] = grp["season"] - 1
         out.append(grp)
     T = pd.concat(out, ignore_index=True)
 
@@ -207,9 +207,9 @@ def add_rolling_features(g: pd.DataFrame) -> pd.DataFrame:
         fl["games_before"] = fl["games_before"] + 1
         fl["days_since_prev"] = (fl["start_date"] - fl["last_date"]).dt.days
         fl["season_opener"] = fl["season"] != fl["last_season"]
-        fl["prev_season"] = fl["last_season"]
-        # ps_* on the base row describe its *previous* season; for the synthetic
-        # row the prior season is the base row's own season, so re-merge.
+        fl["prev_season"] = fl["season"] - 1
+        # ps_* on the base row belong to the base game's season; the synthetic
+        # row may fall in a later season, so re-merge on its own prior season.
         fl = fl.drop(columns=[c for c in fl.columns if c.startswith("ps_")])
         fl = fl.merge(agg, left_on=["team_id", "prev_season"],
                       right_on=["team_id", "season"], suffixes=("", "_agg"), how="left")

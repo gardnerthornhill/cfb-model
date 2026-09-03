@@ -9,13 +9,18 @@ the closing-ish market on 2019–2025.
 
 | Metric | Value |
 |---|---|
-| Margin MAE | 11.72 pts |
-| Total MAE | 11.98 pts |
-| Winner accuracy | 78.2% |
-| Brier score | 0.149 |
-| Margin MAE vs posted line's MAE | 11.46 vs 12.20 |
+| Margin MAE | 13.42 pts |
+| Total MAE | 13.66 pts |
+| Winner accuracy | 72.8% |
+| Brier score | 0.176 |
+| Margin MAE vs posted line's MAE | 13.31 vs 12.20 |
+| ATS vs posted line (FBS vs FBS) | 50.0% |
 
 Note: CFBD lines are opening/consensus, so ATS edges vs them are an upper bound.
+Earlier versions reported 11.72 / 78.2% / 0.149 and a margin MAE below the
+line's; those numbers came from a prior-season stat feature that was keyed on
+the previous *game's* season and so leaked the current season's full-year
+averages into every non-opener row. Fixed in `features/build.py`.
 
 ## Setup
 
