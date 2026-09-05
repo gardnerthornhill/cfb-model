@@ -30,13 +30,6 @@ ELO_REGRESS = 0.33           # fraction regressed to mean each offseason
 # Ridge schedule-adjusted margin rating
 RIDGE_LAMBDA = 8.0
 
-# Cross-division anchors. Historical mean FBS-FCS margin is ~+30 pts; without
-# an explicit anchor, FCS ratings are set almost entirely by FCS-vs-FCS games
-# and drift to "average FBS", wrecking early-season matchup gaps.
-FCS_ELO_ANCHOR = 1100.0      # Elo regression target for FCS teams (FBS: 1500)
-FCS_RIDGE_PRIOR = -30.0      # ridge prior mean for FCS teams, in points
-FCS_PRIOR_WEIGHT = 20.0      # pseudo-game weight of that prior in the ridge solve
-
 # LightGBM
 LGB_PARAMS = dict(
     objective="regression",
@@ -52,3 +45,10 @@ LGB_PARAMS = dict(
     verbose=-1,
 )
 REFIT_EVERY_WEEKS = 4
+# Runtime concurrency only; this does not change any football/model weights.
+NUM_THREADS = int(os.getenv("CFB_NUM_THREADS", "4"))
+if NUM_THREADS < 1:
+    raise ValueError("CFB_NUM_THREADS must be positive")
+# Historical feeds have kickoff times, not final-result publication times.
+# Use a fixed conservative availability lag; never fit it to game outcomes.
+RESULT_DELAY_HOURS = 24

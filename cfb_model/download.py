@@ -1,10 +1,14 @@
 """Download and consolidate all historical data from CFBD."""
+import argparse
+import json
 import sys
+import requests
 
 import pandas as pd
 
 from .config import DATA_DIR, FIRST_SEASON
 from .data import cfbd
+from .data.eligibility import fbs_only
 
 
 def _consolidate(prefix: str, frames: list[pd.DataFrame], out_name: str) -> pd.DataFrame:
@@ -14,24 +18,39 @@ def _consolidate(prefix: str, frames: list[pd.DataFrame], out_name: str) -> pd.D
     return df
 
 
-def run():
-    seasons = list(range(FIRST_SEASON, 2027))
+def run(refresh_season=None, refresh=True):
+    refresh_season = refresh_season or pd.Timestamp.now().year
+    last_season = max(pd.Timestamp.now().year, refresh_season)
+    seasons = list(range(FIRST_SEASON, last_season + 1))
+    (DATA_DIR / "source_snapshot.json").write_text(json.dumps({
+        "status": "in_progress", "requested_refresh_season": refresh_season if refresh else None,
+        "started_at_utc": pd.Timestamp.now(tz="UTC").isoformat(),
+    }, indent=2))
 
-    games = [cfbd.games(y) for y in seasons]
+    games = [cfbd.games(y, force=refresh and y == refresh_season) for y in seasons]
     g = _consolidate("games", games, "games_all.parquet")
-    # keep games involving at least one FBS team
-    g = g[(g["home_classification"] == "fbs") | (g["away_classification"] == "fbs")]
+    raw_games = g
+    # Raw history is retained; all modeled rows require two season-specific FBS classifications.
+    g = fbs_only(g)
     g.to_parquet(DATA_DIR / "games_fbs.parquet", index=False)
-    print(f"games FBS-involved: {len(g)}")
+    print(f"games FBS vs FBS: {len(g)}")
 
     stats = []
-    for y in range(2013, 2027):
+    for y in range(2013, last_season + 1):
         weeks = []
-        for w in range(0, 21):
+        # The API rejects week 0. Request only actual completed schedule weeks,
+        # including postseason weeks, rather than silently swallowing bad requests.
+        scheduled_weeks = sorted(raw_games.loc[
+            (raw_games["season"] == y) & raw_games["completed"], "week"].dropna().astype(int).unique())
+        for w in scheduled_weeks:
+            w = int(w)  # Stable cache keys and JSON metadata, not numpy.int64.
             try:
-                dfw = cfbd.fetch_cached(f"stats_{y}_w{w}", "/games/teams", {"year": y, "week": w})
-            except Exception:
-                continue
+                dfw = cfbd.fetch_cached(f"stats_{y}_w{w}", "/games/teams", {"year": y, "week": w},
+                                        force=refresh and y == refresh_season)
+            except requests.HTTPError as exc:
+                if exc.response is not None and exc.response.status_code == 404:
+                    continue
+                raise
             if len(dfw):
                 weeks.append(dfw)
         if not weeks:
@@ -53,13 +72,14 @@ def run():
     s.to_parquet(DATA_DIR / "stats_all.parquet", index=False)
     print(f"stats: {len(s)} rows")
 
-    talent = [cfbd.talent(y) for y in seasons]
+    talent = [cfbd.talent(y, force=refresh and y == refresh_season) for y in seasons]
     _consolidate("talent", talent, "talent_all.parquet")
 
-    sp = [cfbd.sp_ratings(y) for y in range(2014, 2026)]
+    sp = [cfbd.sp_ratings(y, force=refresh and y == refresh_season - 1)
+          for y in range(2014, last_season)]
     _consolidate("sp+", sp, "sp_all.parquet")
 
-    ln = [cfbd.lines(y) for y in range(2013, 2027)]
+    ln = [cfbd.lines(y, force=refresh and y == refresh_season) for y in range(2013, last_season + 1)]
     l = pd.concat([f for f in ln if len(f)], ignore_index=True)
     l.to_parquet(DATA_DIR / "lines_all.parquet", index=False)
     print(f"lines: {len(l)} rows")
@@ -70,8 +90,20 @@ def run():
     # returning-production endpoint not available on this API plan; skip gracefully
     print("returning production: unavailable, skipping")
 
+    (DATA_DIR / "source_snapshot.json").write_text(json.dumps({
+        "status": "complete",
+        "consolidated_at_utc": pd.Timestamp.now(tz="UTC").isoformat(),
+        "refreshed_season": refresh_season if refresh else None,
+        "refresh_completed": refresh,
+        "completed_fbs_games": int(g["completed"].sum()),
+        "market_observation_time": "not supplied; retrieval time is not quote time",
+    }, indent=2))
     print("DONE")
 
 
 if __name__ == "__main__":
-    sys.exit(run())
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--refresh-season", type=int)
+    ap.add_argument("--no-refresh", action="store_true")
+    args = ap.parse_args()
+    sys.exit(run(args.refresh_season, refresh=not args.no_refresh))

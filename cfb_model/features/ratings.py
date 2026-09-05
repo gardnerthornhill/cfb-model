@@ -6,32 +6,23 @@ that finished before it kicked off.
 import numpy as np
 import pandas as pd
 
-from ..config import ELO_HOME_ADV, ELO_INIT, ELO_K, ELO_REGRESS, FCS_ELO_ANCHOR, FCS_PRIOR_WEIGHT, FCS_RIDGE_PRIOR, RIDGE_LAMBDA
+from ..config import ELO_HOME_ADV, ELO_INIT, ELO_K, ELO_REGRESS, RIDGE_LAMBDA
 
 
 class EloEngine:
-    """Margin-of-victory Elo with offseason regression toward a division anchor.
+    """Margin-of-victory Elo on eligible FBS games, with the existing FBS anchor."""
 
-    FBS teams regress toward ELO_INIT; teams in `fcs_teams` regress toward
-    FCS_ELO_ANCHOR, so the cross-division gap is baked into the scale instead
-    of being learned (badly) from sparse interdivision games.
-    """
-
-    def __init__(self, fcs_teams: set[int] | None = None):
+    def __init__(self):
         self.rating: dict[int, float] = {}
-        self.fcs_teams = fcs_teams or set()
         self._season = None
 
-    def _anchor(self, tid: int) -> float:
-        return FCS_ELO_ANCHOR if tid in self.fcs_teams else ELO_INIT
-
     def _get(self, tid: int) -> float:
-        return self.rating.get(tid, self._anchor(tid))
+        return self.rating.get(tid, ELO_INIT)
 
     def regress_offseason(self, season: int):
         if self._season is not None and season > self._season:
             for t in self.rating:
-                self.rating[t] = self.rating[t] + (self._anchor(t) - self.rating[t]) * ELO_REGRESS
+                self.rating[t] = self.rating[t] + (ELO_INIT - self.rating[t]) * ELO_REGRESS
         self._season = season
 
     def pregame(self, home_id: int, away_id: int) -> tuple[float, float]:
@@ -66,10 +57,8 @@ class RidgeRatings:
     def add_game(self, season: int, home_id: int, away_id: int, margin: float):
         self._history.setdefault(season, []).append((home_id, away_id, margin))
 
-    def solve(self, season: int, current: list[tuple[int, int, float]] | None = None,
-              prior: dict[int, float] | None = None) -> dict[int, float]:
-        """Prior: optional {team_id: mean_margin} pseudo-observations (weighted
-        FCS_PRIOR_WEIGHT) that anchor teams with little FBS-scale evidence."""
+    def solve(self, season: int, current: list[tuple[int, int, float]] | None = None) -> dict[int, float]:
+        """Solve only on FBS observations, shrinking unobserved teams toward zero."""
         rows_h, rows_a, vals, wts = [], [], [], []
         for lag, w in self.PRIOR_WEIGHTS.items():
             for h, a, m in self._history.get(season - lag, []):
@@ -85,14 +74,6 @@ class RidgeRatings:
         for g in range(len(rows_h)):
             X[g, idx[rows_h[g]]] = 1.0
             X[g, idx[rows_a[g]]] = -1.0
-        if prior:
-            for t, p in prior.items():
-                if t in idx:
-                    row = np.zeros((1, n_t))
-                    row[0, idx[t]] = 1.0
-                    X = np.vstack([X, row])
-                    vals.append(p)
-                    wts.append(FCS_PRIOR_WEIGHT)
         w = np.sqrt(np.array(wts, dtype=float))[:, None]
         A = X * w
         b = np.array(vals, dtype=float) * w.ravel()

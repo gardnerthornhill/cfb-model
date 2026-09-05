@@ -1,0 +1,87 @@
+{
+  "sample": "Same 5252 FBS-vs-FBS games, 2019\u20132025; unchanged final scores",
+  "before": {
+    "games": 5252,
+    "margin_mae": 13.311397189292542,
+    "total_mae": 13.693395625143712,
+    "winner_accuracy": 0.6970677837014471,
+    "brier": 0.19403817240155893,
+    "games_with_spread": 5252,
+    "paired_model_margin_mae": 13.311397189292542,
+    "market_margin_mae": 12.196210967250572,
+    "games_with_total": 5252,
+    "paired_model_total_mae": 13.693395625143712,
+    "market_total_mae": 12.690879664889566,
+    "ats": {
+      "wins": 2573,
+      "losses": 2586,
+      "pushes": 93,
+      "abstentions": 0,
+      "rate": 0.498740065904245
+    },
+    "over_under": {
+      "wins": 2705,
+      "losses": 2484,
+      "pushes": 63,
+      "abstentions": 0,
+      "rate": 0.5212950472152631
+    }
+  },
+  "after": {
+    "games": 5252,
+    "margin_mae": 12.939911067215462,
+    "total_mae": 13.348938704476748,
+    "winner_accuracy": 0.7105864432597105,
+    "brier": 0.1872914121215436,
+    "games_with_spread": 5252,
+    "paired_model_margin_mae": 12.939911067215462,
+    "market_margin_mae": 12.196210967250572,
+    "games_with_total": 5252,
+    "paired_model_total_mae": 13.348938704476748,
+    "market_total_mae": 12.690689261233816,
+    "ats": {
+      "wins": 2577,
+      "losses": 2582,
+      "pushes": 93,
+      "abstentions": 0,
+      "rate": 0.4995154099631712
+    },
+    "over_under": {
+      "wins": 2717,
+      "losses": 2471,
+      "pushes": 64,
+      "abstentions": 0,
+      "rate": 0.5237085582112567
+    }
+  },
+  "paired_error_change_95pct_intervals": {
+    "margin": {
+      "week": [
+        -0.5188340243072553,
+        -0.22536403780579645
+      ],
+      "season": [
+        -0.6266844938107963,
+        -0.12101731679175862
+      ]
+    },
+    "total": {
+      "week": [
+        -0.46635837683357034,
+        -0.22720857525168084
+      ],
+      "season": [
+        -0.5887190176571975,
+        -0.12513519228833664
+      ]
+    }
+  },
+  "fits": 44,
+  "total_line_aggregation_changed_games": 4,
+  "manual_weight_tuning": false,
+  "source": {
+    "git_commit": "c0b33deb573e853756060860d25fea8d1c6da159",
+    "git_source_dirty": true,
+    "source_sha256": "babda6599347b8ac4ba51fc6b2394d2947ec7e46d654aab4dd46f16c48383e8c"
+  }
+}

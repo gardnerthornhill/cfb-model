@@ -9,7 +9,8 @@ import numpy as np
 import pandas as pd
 from lightgbm import LGBMRegressor, early_stopping, log_evaluation
 
-from ..config import LGB_PARAMS
+from ..config import LGB_PARAMS, NUM_THREADS
+from ..features.build import FEATURE_COLS
 
 PRIOR_COLS = ["sp_prior_diff", "adj_margin_diff", "elo_diff"]
 ELO_TO_PTS = 1.0 / 12.0  # ~400 Elo gap ~= 33 pts
@@ -34,35 +35,63 @@ def apply_linear_prior(m, df: pd.DataFrame) -> np.ndarray:
     return m.predict(_prior_matrix(df))
 
 
-def _fit(X, y, valid=None):
-    params = dict(LGB_PARAMS)
+def _fit(X, y, valid=None, n_estimators=None):
+    params = dict(LGB_PARAMS, n_jobs=NUM_THREADS)
+    if n_estimators is not None:
+        params["n_estimators"] = n_estimators
     model = LGBMRegressor(**params)
-    if valid is not None and len(valid[0]) >= 500:
-        model.fit(X, y, eval_set=[valid],
+    if valid is not None:
+        model.fit(X, y, eval_X=valid[0], eval_y=valid[1],
                   callbacks=[early_stopping(150, verbose=False), log_evaluation(0)])
     else:
         model.fit(X, y, callbacks=[log_evaluation(0)])
     return model
 
 
-def fit_pair(X, y_margin, y_total, valid_slice=None):
-    """Train margin + total models. valid_slice = tail indices for early stopping."""
-    if valid_slice is not None:
-        n_valid = X.shape[0] - (valid_slice.start or 0) if isinstance(valid_slice, slice) else len(valid_slice)
-    else:
-        n_valid = 0
-    if n_valid >= 500:
-        Xv, ymv = X[valid_slice], y_margin[valid_slice]
-        ytv = y_total[valid_slice]
-        Xtr = np.delete(X, valid_slice, axis=0)
-        mtr = np.delete(y_margin, valid_slice)
-        ttr = np.delete(y_total, valid_slice)
-        margin_model = _fit(Xtr, mtr, (Xv, ymv))
-        total_model = _fit(Xtr, ttr, (Xv, ytv))
-    else:
-        margin_model = _fit(X, y_margin)
-        total_model = _fit(X, y_total)
-    return margin_model, total_model
+def temporal_split(frame):
+    """Reserve the existing 6% tail, keeping all same-kickoff rows together."""
+    frame = frame.sort_values(["start_date", "id"]).reset_index(drop=True)
+    if len(frame) < 2:
+        raise ValueError("Need at least two dated training games")
+    cutoff = frame.iloc[min(int(len(frame) * .94), len(frame) - 1)]["start_date"]
+    inner = frame[frame["start_date"] < cutoff]
+    valid = frame[frame["start_date"] >= cutoff]
+    if inner.empty or valid.empty:
+        raise ValueError("Training needs separate chronological fit and validation periods")
+    return frame, inner, valid
+
+
+def fit_hybrid(frame):
+    """Select iterations on a wholly isolated temporal tail, then refit all data.
+
+    The inner linear prior cannot see validation outcomes. After selecting the
+    tree counts, both the prior and boosting components refit on every eligible
+    training row. No outer test outcomes enter either stage.
+    """
+    frame, inner, valid = temporal_split(frame)
+    prior_inner = fit_linear_prior(inner, inner["margin"].to_numpy(dtype=np.float64))
+    xi = inner[FEATURE_COLS].to_numpy(dtype=np.float32)
+    xv = valid[FEATURE_COLS].to_numpy(dtype=np.float32)
+    mi = inner["margin"].to_numpy(dtype=np.float32) - apply_linear_prior(prior_inner, inner)
+    mv = valid["margin"].to_numpy(dtype=np.float32) - apply_linear_prior(prior_inner, valid)
+    selected = (
+        _fit(xi, mi, (xv, mv)),
+        _fit(xi, inner["total"].to_numpy(dtype=np.float32),
+             (xv, valid["total"].to_numpy(dtype=np.float32))),
+    )
+    iterations = [m.best_iteration_ or LGB_PARAMS["n_estimators"] for m in selected]
+    prior = fit_linear_prior(frame, frame["margin"].to_numpy(dtype=np.float64))
+    x = frame[FEATURE_COLS].to_numpy(dtype=np.float32)
+    models = (
+        _fit(x, frame["margin"].to_numpy(dtype=np.float32) - apply_linear_prior(prior, frame),
+             n_estimators=iterations[0]),
+        _fit(x, frame["total"].to_numpy(dtype=np.float32), n_estimators=iterations[1]),
+    )
+    metadata = {"training_rows": len(frame), "validation_rows": len(valid),
+                "validation_start": valid["start_date"].min().isoformat(),
+                "latest_training_kickoff": frame["start_date"].max().isoformat(),
+                "selected_iterations": iterations}
+    return models, prior, metadata
 
 
 def predict_scores(models, X, win_sigma=17.0, margin_add=None):

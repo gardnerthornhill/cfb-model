@@ -19,12 +19,13 @@ def _get(path: str, params: dict) -> list:
     if wait > 0:
         time.sleep(wait)
     _last_call = time.time()
-    r = _session.get(f"{CFBD_BASE}{path}", params=params, timeout=60)
-    if r.status_code == 429:
-        time.sleep(5)
-        return _get(path, params)
-    r.raise_for_status()
-    return r.json()
+    for attempt in range(4):
+        r = _session.get(f"{CFBD_BASE}{path}", params=params, timeout=30)
+        if r.status_code in (429, 500, 502, 503, 504) and attempt < 3:
+            time.sleep(2 ** attempt)
+            continue
+        r.raise_for_status()
+        return r.json()
 
 
 def fetch_cached(endpoint_name: str, path: str, params: dict, force: bool = False) -> pd.DataFrame:
@@ -35,7 +36,13 @@ def fetch_cached(endpoint_name: str, path: str, params: dict, force: bool = Fals
         return _normalize(df)
     rows = _get(path, params)
     df = _normalize(pd.json_normalize(rows))
-    df.to_parquet(fp, index=False)
+    temp = fp.with_suffix(".tmp.parquet")
+    df.to_parquet(temp, index=False)
+    temp.replace(fp)
+    fp.with_suffix(".metadata.json").write_text(json.dumps({
+        "retrieved_at_utc": pd.Timestamp.now(tz="UTC").isoformat(),
+        "endpoint": path, "params": params,
+    }, indent=2))
     return df
 
 
@@ -67,22 +74,26 @@ def lines(season: int, force: bool = False) -> pd.DataFrame:
     return fetch_cached(f"lines_{season}", "/lines", {"year": season, "seasonType": "both"}, force=force)
 
 
-def talent(season: int) -> pd.DataFrame:
-    return fetch_cached(f"talent_{season}", "/talent", {"year": season})
+def talent(season: int, force: bool = False) -> pd.DataFrame:
+    return fetch_cached(f"talent_{season}", "/talent", {"year": season}, force=force)
 
 
-def sp_ratings(season: int) -> pd.DataFrame:
+def sp_ratings(season: int, force: bool = False) -> pd.DataFrame:
     try:
-        return fetch_cached(f"sp_{season}", "/ratings/sp", {"year": season})
-    except Exception:
-        return pd.DataFrame()
+        return fetch_cached(f"sp_{season}", "/ratings/sp", {"year": season}, force=force)
+    except requests.HTTPError as exc:
+        if exc.response is not None and exc.response.status_code == 404:
+            return pd.DataFrame()
+        raise
 
 
 def returning_production(season: int) -> pd.DataFrame:
     try:
         return fetch_cached(f"retprod_{season}", "/teams/returning-production", {"year": season})
-    except Exception:
-        return pd.DataFrame()
+    except requests.HTTPError as exc:
+        if exc.response is not None and exc.response.status_code == 404:
+            return pd.DataFrame()
+        raise
 
 
 def venues() -> pd.DataFrame:

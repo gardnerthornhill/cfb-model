@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "created_at_utc": "2026-09-05T10:29:30.665451+00:00",
+  "git_commit": "48adfeb43d48f48256b749d167b4296bedb32300",
+  "git_source_dirty": true,
+  "source_sha256": "a86c79dc0a5adfe3bd121a531d9ddc1f72de3bd408e9fd475ec9a4b397e2d855",
+  "artifact_sha256": "ba83d78aad14e5c27d504620611bb824f8a112e4d2839774905e46cfbdbf8cbf",
+  "inputs": {
+    "/Users/jamesthornhill/Desktop/cfb-model/data_store/features.parquet": "a55c5a9c4ae1fb9477e04e821533e5d107715fd7c5cfeebff80f8c9036f1eb6d",
+    "/Users/jamesthornhill/Desktop/cfb-model/data_store/lines_all.parquet": "e54979e3b16f4a22530e3e68016b01b874fce000966a1d7139dfe4c88a20a1ea"
+  },
+  "packages": {
+    "pandas": "2.3.0",
+    "numpy": "2.3.1",
+    "scipy": "1.16.0",
+    "scikit-learn": "1.7.0",
+    "lightgbm": "4.7.0"
+  },
+  "scope": "FBS vs FBS",
+  "issued_at_utc": "2026-09-05T10:29:30.462479+00:00",
+  "data_cutoff_utc": "2026-09-05T10:29:27.048006Z",
+  "training_rows": 9097,
+  "validation_rows": 554,
+  "validation_start": "2025-10-04T19:30:00",
+  "latest_training_kickoff": "2026-09-04T01:00:00",
+  "selected_iterations": [
+    26,
+    108
+  ]
+}

@@ -10,6 +10,9 @@ concurrency:
   group: cfb-update
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -23,7 +26,10 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
+
+      - name: Verify model invariants
+        run: python -m pytest -q
 
       - name: Restore data store
         uses: actions/cache@v4
@@ -39,13 +45,16 @@ jobs:
           python -m cfb_model.download
           python -m cfb_model.features.build
           python -m cfb_model.backtest.walk_forward
-          python -m cfb_model.predict
+          python -m cfb_model.predict --no-refresh
 
       - name: Upload predictions artifact
         uses: actions/upload-artifact@v4
         with:
           name: weekly-predictions
-          path: data_store/out/*.csv
+          path: |
+            data_store/out/
+            data_store/backtest_preds.parquet
+            data_store/backtest_preds.parquet.manifest.json
           if-no-files-found: error
 
       - name: Commit updated outputs

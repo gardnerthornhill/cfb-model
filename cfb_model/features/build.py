@@ -1,13 +1,16 @@
-"""Build the master causal feature table.
+"""Build FBS-only pregame features with conservative result availability.
 
-One row per FBS-involved game. Every feature is computed only from information
-available before kickoff: Elo/ridge ratings snapshotted pre-week, rolling stat
-averages shifted by one game, prior-season SP+/talent priors, rest, travel.
+Live and historical rows query the same postgame state. Football weighting
+formulas are unchanged; division membership comes from each season's games.
 """
 import numpy as np
 import pandas as pd
+from collections import deque
 
-from ..config import DATA_DIR, FCS_RIDGE_PRIOR
+from ..config import DATA_DIR
+from ..artifacts import write_manifest
+from ..data.eligibility import fbs_only
+from ..data.timing import available_at
 from .ratings import EloEngine, RidgeRatings
 
 FEATURE_COLS = [
@@ -21,24 +24,12 @@ FEATURE_COLS = [
     "ps_ypp_h", "ps_ypp_a", "ps_pts_h", "ps_pts_a", "ps_pts_def_h", "ps_pts_def_a",
     "rest_h", "rest_a", "opener_h", "opener_a", "bye_h", "bye_a",
     "travel_away", "neutral_site", "conference_game", "week",
-    "games_played_h", "games_played_a", "vs_fcs_h", "vs_fcs_a",
-    "fcs_h", "fcs_a", "sp_miss_h", "sp_miss_a", "talent_miss_h", "talent_miss_a",
+    "games_played_h", "games_played_a", "sp_miss_h", "sp_miss_a", "talent_miss_h", "talent_miss_a",
 ]
 
 
-def _parse_ratio(s: pd.Series) -> pd.Series:
-    def f(v):
-        try:
-            a, b = str(v).split("-")
-            return (float(a), float(b))
-        except Exception:
-            return (np.nan, np.nan)
-    parsed = s.apply(f)
-    return parsed
-
-
 def load_games() -> pd.DataFrame:
-    g = pd.read_parquet(DATA_DIR / "games_fbs.parquet")
+    g = fbs_only(pd.read_parquet(DATA_DIR / "games_fbs.parquet"))
     g = g.sort_values(["start_date", "id"]).reset_index(drop=True)
     g["start_date"] = pd.to_datetime(g["start_date"], utc=True).dt.tz_localize(None)
     g["margin"] = np.where(g["completed"], g["home_points"] - g["away_points"], np.nan)
@@ -46,68 +37,53 @@ def load_games() -> pd.DataFrame:
     return g
 
 
-def add_ratings(g: pd.DataFrame) -> tuple[pd.DataFrame, dict, dict]:
-    """Elo pass + ridge snapshots. Returns games with elo cols, ridge snapshots,
-    and final rating dicts (for future-week prediction)."""
-    fcs_h = set(g.loc[g["home_classification"] == "fcs", "home_id"].astype(int))
-    fcs_a = set(g.loc[g["away_classification"] == "fcs", "away_id"].astype(int))
-    fcs_teams = fcs_h | fcs_a
-    elo = EloEngine(fcs_teams=fcs_teams)
+def add_ratings(g: pd.DataFrame, as_of=None) -> tuple[pd.DataFrame, dict, dict, dict]:
+    """FBS-only ratings, with separate calendar-date and postseason snapshots."""
+    if len(fbs_only(g)) != len(g):
+        raise ValueError("Rating inputs must be FBS vs FBS")
+    elo = EloEngine()
     ridge = RidgeRatings()
-    fcs_prior = {t: FCS_RIDGE_PRIOR for t in fcs_teams}
-    elo_h = np.full(len(g), np.nan)
-    elo_a = np.full(len(g), np.nan)
-    adj_h = np.full(len(g), np.nan)
-    adj_a = np.full(len(g), np.nan)
-
-    key = g["season"].astype(str) + "_" + g["week"].astype(str)
-    snapshots: dict[str, dict[int, float]] = {}
-    cur: list[tuple[int, int, float]] = []
-    cur_season = None
-
-    done = g[g["completed"] & g["margin"].notna()]
-    done_pos = set(done.index)
-
-    def both_fcs(row):
-        return (row.get("home_classification") == "fcs"
-                and row.get("away_classification") == "fcs")
-
-    for i, row in g.iterrows():
-        season, week = int(row["season"]), int(row["week"])
-        k = f"{season}_{week}"
-        if k not in snapshots:
+    values = []
+    snapshots = {}
+    current = []
+    current_season = None
+    pending = deque()
+    for row in g.itertuples(index=False):
+        season = int(row.season)
+        cutoff = min(row.start_date, as_of) if as_of is not None else row.start_date
+        while pending and pending[0][0] <= cutoff:
+            _, played_season, game = pending.popleft()
+            elo.update(*game)
+            ridge.add_game(played_season, *game)
+            if played_season == current_season:
+                current.append(game)
+        if current_season != season:
             elo.regress_offseason(season)
-            if cur_season is not None and season != cur_season:
-                cur = []
-            cur_season = season
-            snapshots[k] = ridge.solve(season, cur, prior=fcs_prior)
-        rh, ra = elo.pregame(int(row["home_id"]), int(row["away_id"]))
-        elo_h[i], elo_a[i] = rh, ra
-        snap = snapshots[k]
-        adj_h[i] = snap.get(int(row["home_id"]), np.nan)
-        adj_a[i] = snap.get(int(row["away_id"]), np.nan)
-        if i in done_pos and not both_fcs(row):
-            # FCS-vs-FCS games are excluded from rating updates: they carry no
-            # information about the FBS scale, and letting them vote lets FCS
-            # teams cluster around average-FBS ratings.
-            m = float(row["margin"])
-            elo.update(int(row["home_id"]), int(row["away_id"]), m)
-            ridge.add_game(season, int(row["home_id"]), int(row["away_id"]), m)
-            if cur_season == season:
-                cur.append((int(row["home_id"]), int(row["away_id"]), m))
-
-    # final ratings for predicting upcoming weeks
-    final_snap = ridge.solve(cur_season or 0, cur, prior=fcs_prior)
+            current = []
+            current_season = season
+        # CFBD week numbers can repeat across Aug 29/Sep 3 and bowl season.
+        key = f"{season}_{row.season_type}_{int(row.week)}_{row.start_date.date()}"
+        if key not in snapshots:
+            snapshots[key] = ridge.solve(season, current)
+        rh, ra = elo.pregame(int(row.home_id), int(row.away_id))
+        snap = snapshots[key]
+        # Zero is the existing ridge prior for an FBS team with no observations.
+        values.append((rh, ra, snap.get(int(row.home_id), 0.0),
+                       snap.get(int(row.away_id), 0.0)))
+        if row.completed and pd.notna(row.margin):
+            game = (int(row.home_id), int(row.away_id), float(row.margin))
+            pending.append((available_at(row.start_date), season, game))
     g = g.copy()
-    g["elo_home_pre"] = elo_h
-    g["elo_away_pre"] = elo_a
-    g["adj_home"] = adj_h
-    g["adj_away"] = adj_a
-    return g, snapshots, final_snap, dict(elo.rating)
+    g[["elo_home_pre", "elo_away_pre", "adj_home", "adj_away"]] = pd.DataFrame(
+        values, index=g.index, columns=["elo_home_pre", "elo_away_pre", "adj_home", "adj_away"])
+    return g, snapshots, ridge.solve(current_season or 0, current), dict(elo.rating)
 
 
 def build_team_stats() -> pd.DataFrame:
-    """Per team-game metrics with opponent-adjusted defensive numbers."""
+    """Raw team-game efficiency, paired to obtain defensive statistics.
+
+    These statistics are not opponent-adjusted; only the ridge ratings are.
+    """
     s = pd.read_parquet(DATA_DIR / "stats_all.parquet")
     s = s.rename(columns={c: "".join("_" + ch.lower() if ch.isupper() else ch for ch in c).lstrip("_")
                           for c in s.columns})
@@ -155,76 +131,76 @@ def build_team_stats() -> pd.DataFrame:
     return opp
 
 
-def add_rolling_features(g: pd.DataFrame) -> pd.DataFrame:
-    ts = build_team_stats()
-    game_dates = g.set_index("id")["start_date"]
-    ts["date"] = ts["id"].map(game_dates)
-    ts = ts.dropna(subset=["date"]).sort_values(["date", "team_id"]).reset_index(drop=True)
+def add_rolling_features(g: pd.DataFrame, calendar: pd.DataFrame | None = None,
+                         as_of=None) -> pd.DataFrame:
+    """Use the same strictly-prior postgame state for historical and live rows.
 
+    Statistical outcomes come only from completed eligible FBS matchups. The
+    calendar may include excluded opponents, solely for actual rest/openers
+    and season game counts; their scores never enter these averages.
+    """
     met = ["pts", "pts_allowed", "ypp_off", "ypp_def", "comp_pct", "third_down_pct",
            "third_down_def_pct", "tov_margin", "poss_min"]
-    out = []
-    for tid, grp in ts.groupby("team_id"):
-        grp = grp.sort_values("date").copy()
+    ts = build_team_stats()
+    done = g[g["completed"]].set_index("id")
+    ts = ts[ts["id"].isin(done.index)].copy()
+    ts["date"] = ts["id"].map(done["start_date"])
+    ts = ts.sort_values(["date", "team_id", "id"]).drop_duplicates(["id", "team_id"])
+    prior_stats = ts if as_of is None else ts[available_at(ts["date"]) <= as_of]
+    agg = prior_stats.groupby(["team_id", "season"])[met].mean().add_prefix("ps_").reset_index()
+    agg = agg.rename(columns={"season": "prev_season"})
+
+    def long(frame):
+        return pd.concat([
+            frame[["id", "season", "start_date", "home_id"]].rename(columns={"home_id": "team_id"}),
+            frame[["id", "season", "start_date", "away_id"]].rename(columns={"away_id": "team_id"}),
+        ], ignore_index=True).sort_values(["start_date", "id"])
+
+    targets = long(g)
+    calendar = g if calendar is None else calendar
+    played = long(calendar[calendar["completed"]]).drop_duplicates(["id", "team_id"])
+    played["season_games"] = played.groupby(["team_id", "season"]).cumcount() + 1
+    stat_cols = [f"{window}_{m}" for window in ("std", "l3") for m in met]
+    rows = []
+    for tid, target in targets.groupby("team_id", sort=False):
+        target = target.sort_values("start_date").copy()
+        target["query_date"] = target["start_date"] if as_of is None else target["start_date"].clip(upper=as_of)
+        history = ts[ts["team_id"] == tid].sort_values("date").copy()
         for m in met:
-            v = grp[m].shift(1)
-            grp[f"std_{m}"] = v.expanding(min_periods=1).mean()
-            grp[f"l3_{m}"] = v.rolling(3, min_periods=1).mean()
-        grp["games_before"] = range(len(grp))
-        grp["days_since_prev"] = grp["date"].diff().dt.days
-        grp["season_opener"] = grp["season"] != grp["season"].shift(1)
-        grp["prev_season"] = grp["season"] - 1
-        out.append(grp)
-    T = pd.concat(out, ignore_index=True)
-
-    # prior-season aggregates (kept all season long as the preseason baseline;
-    # current-form features capture in-season movement separately)
-    agg = ts.groupby(["team_id", "season"])[met].mean().reset_index()
-    agg.columns = ["team_id", "season"] + [f"ps_{m}" for m in met]
-    T = T.merge(agg, left_on=["team_id", "prev_season"],
-                right_on=["team_id", "season"], suffixes=("", "_agg"), how="left")
-
-    tcols = ["id", "team_id"] + [f"std_{m}" for m in met] + [f"l3_{m}" for m in met] + \
-            [f"ps_{m}" for m in met] + ["games_before", "days_since_prev", "season_opener"]
-    full = T  # pre-trim copy retains date/season for the synthetic-row step
-    T = T[tcols]
-
-    # Unplayed (future) games have no stats row, so they'd otherwise lose every
-    # stat feature. Give each team's next game the state of its most recent
-    # played game: rolling means already shifted by one game, so they describe
-    # exactly "form through last game played" — the correct causal snapshot.
-    fut = g[~g["completed"]]
-    if len(fut):
-        fl = pd.concat([
-            fut[["id", "season", "start_date", "home_id"]].rename(columns={"home_id": "team_id"}),
-            fut[["id", "season", "start_date", "away_id"]].rename(columns={"away_id": "team_id"}),
-        ], ignore_index=True)
-        fl["team_id"] = fl["team_id"].astype(int)
-        base = full.sort_values("date").groupby("team_id").tail(1)
-        b = base[["team_id"] + tcols[2:] + ["date", "season"]].rename(
-            columns={"date": "last_date", "season": "last_season"})
-        fl = fl.merge(b, on="team_id", how="inner")
-        fl["games_before"] = fl["games_before"] + 1
-        fl["days_since_prev"] = (fl["start_date"] - fl["last_date"]).dt.days
-        fl["season_opener"] = fl["season"] != fl["last_season"]
-        fl["prev_season"] = fl["season"] - 1
-        # ps_* on the base row belong to the base game's season; the synthetic
-        # row may fall in a later season, so re-merge on its own prior season.
-        fl = fl.drop(columns=[c for c in fl.columns if c.startswith("ps_")])
-        fl = fl.merge(agg, left_on=["team_id", "prev_season"],
-                      right_on=["team_id", "season"], suffixes=("", "_agg"), how="left")
-        Ts = fl[tcols]
-        T = pd.concat([T, Ts], ignore_index=True)
-
-    h = T.rename(columns={c: f"{c}_h" for c in tcols[2:]})
-    a = T.rename(columns={c: f"{c}_a" for c in tcols[2:]})
-    g = g.merge(h, left_on=["id", "home_id"], right_on=["id", "team_id"], how="left").drop(columns=["team_id"])
-    g = g.merge(a, left_on=["id", "away_id"], right_on=["id", "team_id"], how="left").drop(columns=["team_id"])
-
-    # rest handling
-    for side in ("h", "a"):
+            # State AFTER this game's outcome; query it strictly BEFORE target kickoff.
+            history[f"std_{m}"] = history[m].expanding(min_periods=1).mean()
+            history[f"l3_{m}"] = history[m].rolling(3, min_periods=1).mean()
+        if len(history):
+            history["available_at"] = available_at(history["date"])
+            target = pd.merge_asof(target, history[["available_at"] + stat_cols],
+                                   left_on="query_date", right_on="available_at",
+                                   direction="backward", allow_exact_matches=True)
+        else:
+            for col in stat_cols:
+                target[col] = np.nan
+        context = played[played["team_id"] == tid][["start_date", "season", "season_games"]].rename(
+            columns={"start_date": "last_date", "season": "last_season"})
+        if len(context):
+            target = pd.merge_asof(target, context.sort_values("last_date"),
+                                   left_on="query_date", right_on="last_date",
+                                   direction="backward", allow_exact_matches=False)
+        else:
+            target["last_date"] = pd.NaT
+            target["last_season"] = np.nan
+            target["season_games"] = 0
+        target["season_opener"] = target["season"] != target["last_season"]
+        target["games_before"] = np.where(target["season_opener"], 0, target["season_games"])
+        target["days_since_prev"] = (target["start_date"] - target["last_date"]).dt.days
+        target["prev_season"] = target["season"] - 1
+        rows.append(target)
+    T = pd.concat(rows, ignore_index=True).merge(agg, on=["team_id", "prev_season"], how="left")
+    cols = stat_cols + [f"ps_{m}" for m in met] + ["games_before", "days_since_prev", "season_opener"]
+    for side, id_col in (("h", "home_id"), ("a", "away_id")):
+        state = T[["id", "team_id"] + cols].rename(columns={c: f"{c}_{side}" for c in cols})
+        g = g.merge(state, left_on=["id", id_col], right_on=["id", "team_id"],
+                    how="left", validate="one_to_one").drop(columns="team_id")
         d = g[f"days_since_prev_{side}"]
-        opener = g[f"season_opener_{side}"].fillna(False)
+        opener = g[f"season_opener_{side}"].astype(bool)
         g[f"rest_{side}"] = np.where(opener, 20.0, d.clip(6, 20)).astype(float)
         g[f"opener_{side}"] = opener.astype(float)
         g[f"bye_{side}"] = ((~opener) & (d >= 13) & (d <= 40)).astype(float)
@@ -321,13 +297,6 @@ def add_travel_rest_context(g: pd.DataFrame) -> pd.DataFrame:
     g["conference_game"] = g["conference_game"].fillna(False).astype(float)
     g["week"] = g["week"].astype(float)
 
-    cls_h = g.get("home_classification")
-    cls_a = g.get("away_classification")
-    g["vs_fcs_h"] = (cls_a == "fcs").astype(float)
-    g["vs_fcs_a"] = (cls_h == "fcs").astype(float)
-    g["fcs_h"] = (cls_h == "fcs").astype(float)
-    g["fcs_a"] = (cls_a == "fcs").astype(float)
-
     g["games_played_h"] = g["games_before_h"]
     g["games_played_a"] = g["games_before_a"]
     drop = [c for c in g.columns if c.startswith("_")]
@@ -359,22 +328,43 @@ def finalize(g: pd.DataFrame) -> pd.DataFrame:
     return g
 
 
-def build_all(save=True) -> pd.DataFrame:
+FEATURE_INPUT_NAMES = ("games_fbs.parquet", "games_all.parquet", "stats_all.parquet",
+                       "teams.parquet", "talent_all.parquet", "sp_all.parquet", "venues.parquet")
+
+
+def feature_inputs():
+    paths = [DATA_DIR / name for name in FEATURE_INPUT_NAMES]
+    snapshot = DATA_DIR / "source_snapshot.json"
+    return paths + ([snapshot] if snapshot.exists() else [])
+
+
+def build_all(save=True, as_of=None) -> pd.DataFrame:
+    import json
+    source_snapshot = DATA_DIR / "source_snapshot.json"
+    if source_snapshot.exists() and json.loads(source_snapshot.read_text()).get("status") != "complete":
+        raise ValueError("Source refresh did not finish; rerun download before building or predicting")
+    as_of = pd.Timestamp.now(tz="UTC") if as_of is None else pd.Timestamp(as_of)
+    if as_of.tzinfo is not None:
+        as_of = as_of.tz_convert("UTC").tz_localize(None)
     g = load_games()
-    g, snapshots, final_adj, final_elo = add_ratings(g)
+    g, snapshots, final_adj, final_elo = add_ratings(g, as_of=as_of)
     g = add_priors(g)
-    g = add_rolling_features(g)
+    calendar = pd.read_parquet(DATA_DIR / "games_all.parquet")
+    calendar["start_date"] = pd.to_datetime(calendar["start_date"], utc=True).dt.tz_localize(None)
+    g = add_rolling_features(g, calendar=calendar, as_of=as_of)
     g = add_travel_rest_context(g)
     g = finalize(g)
     keep_cols = list(dict.fromkeys(FEATURE_COLS + [
-        "id", "season", "start_date", "home_id", "away_id",
+        "id", "season", "season_type", "home_classification", "away_classification",
+        "start_date", "home_id", "away_id",
         "home_team", "away_team", "completed",
         "home_points", "away_points", "margin", "total",
         "elo_home_pre", "elo_away_pre", "adj_home", "adj_away"]))
     feats = g[keep_cols].copy()
     if save:
         feats.to_parquet(DATA_DIR / "features.parquet", index=False)
-        import json
+        write_manifest(DATA_DIR / "features.parquet", feature_inputs(),
+                       scope="FBS vs FBS", rows=len(feats), as_of_utc=as_of.isoformat() + "Z")
         with open(DATA_DIR / "final_ratings.json", "w") as f:
             json.dump({"elo": {str(k): v for k, v in final_elo.items()},
                        "adj": {str(k): v for k, v in final_adj.items()},
