@@ -1,0 +1,7 @@
+{
+  "input": "reports\\2026-09-08-week1\\historical_candidate_predictions.csv",
+  "input_sha256": "e0c2e8f060070973323c8632875d24df3bcc6846fc0b22353acc4c9a56f070a0",
+  "regular_season_games": 4972,
+  "method": "Existing chronological out-of-sample baseline predictions; fixed CFBD week bins.",
+  "limitation": "Different games and schedule composition; not an isolated causal estimate of added data."
+}

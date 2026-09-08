@@ -1,0 +1,12 @@
+{
+  "recent_six": {
+    "promote": false,
+    "development_margin_change": -0.01949722038863181,
+    "confirmation_margin_change": 0.06290577376256734
+  },
+  "half_residual": {
+    "promote": false,
+    "development_margin_change": 0.05412037126339741,
+    "confirmation_margin_change": 0.09473418536496372
+  }
+}

@@ -1,0 +1,1773 @@
+{
+  "identity": {
+    "git_commit": "988f4049299a4ca04baa236856f138d85212e9cd",
+    "git_source_dirty": true,
+    "source_sha256": "c0b558c24985a1bf82fe76663d68142b8f6b17e7cb2afcc261a78cd4b75aeebd",
+    "inputs": {
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\features.parquet": "9a9dc50b80a5997d903fb9ecb818b7674a7174bfcfcc7d4d9905422023f414f8",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\lines_all.parquet": "fc544962f5a219c98635a7fcc3d2748c65dff35f9fc1100c98c7c5f5f22f1da9"
+    }
+  },
+  "fits": [
+    {
+      "candidate": "baseline",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-08-24T23:00:00",
+      "prior_coefficients": [
+        3.1422109149779165,
+        0.10499905042373153,
+        1.7845294824927116,
+        -0.21648149497645705
+      ],
+      "training_rows": 3833,
+      "validation_rows": 233,
+      "validation_start": "2018-11-10T17:00:00",
+      "latest_training_kickoff": "2019-01-08T01:00:00",
+      "selected_iterations": [
+        28,
+        102
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-08-24T23:00:00",
+      "prior_coefficients": [
+        3.1422109149779165,
+        0.10499905042373153,
+        1.7845294824927116,
+        -0.21648149497645705
+      ],
+      "training_rows": 3833,
+      "validation_rows": 233,
+      "validation_start": "2018-11-10T17:00:00",
+      "latest_training_kickoff": "2019-01-08T01:00:00",
+      "selected_iterations": [
+        28,
+        102
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-09-20T00:00:00",
+      "prior_coefficients": [
+        3.2388922549017045,
+        0.14180694930925816,
+        1.7575421077719597,
+        -0.21997723084268767
+      ],
+      "training_rows": 3972,
+      "validation_rows": 239,
+      "validation_start": "2018-11-24T01:30:00",
+      "latest_training_kickoff": "2019-09-15T02:30:00",
+      "selected_iterations": [
+        39,
+        40
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-09-20T00:00:00",
+      "prior_coefficients": [
+        3.2388922549017045,
+        0.14180694930925816,
+        1.7575421077719597,
+        -0.21997723084268767
+      ],
+      "training_rows": 3972,
+      "validation_rows": 239,
+      "validation_start": "2018-11-24T01:30:00",
+      "latest_training_kickoff": "2019-09-15T02:30:00",
+      "selected_iterations": [
+        39,
+        40
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-10-17T00:00:00",
+      "prior_coefficients": [
+        3.2686131348291645,
+        0.13899777225005977,
+        1.759006404191057,
+        -0.21423657243956012
+      ],
+      "training_rows": 4172,
+      "validation_rows": 252,
+      "validation_start": "2019-09-08T02:30:00",
+      "latest_training_kickoff": "2019-10-13T03:00:00",
+      "selected_iterations": [
+        57,
+        53
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-10-17T00:00:00",
+      "prior_coefficients": [
+        3.2686131348291645,
+        0.13899777225005977,
+        1.759006404191057,
+        -0.21423657243956012
+      ],
+      "training_rows": 4172,
+      "validation_rows": 252,
+      "validation_start": "2019-09-08T02:30:00",
+      "latest_training_kickoff": "2019-10-13T03:00:00",
+      "selected_iterations": [
+        57,
+        53
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-11-12T23:00:00",
+      "prior_coefficients": [
+        3.3097899446126746,
+        0.12081458734056545,
+        1.7684729960987955,
+        -0.2081529054669596
+      ],
+      "training_rows": 4383,
+      "validation_rows": 263,
+      "validation_start": "2019-10-10T00:00:00",
+      "latest_training_kickoff": "2019-11-10T04:00:00",
+      "selected_iterations": [
+        70,
+        203
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-11-12T23:00:00",
+      "prior_coefficients": [
+        3.3097899446126746,
+        0.12081458734056545,
+        1.7684729960987955,
+        -0.2081529054669596
+      ],
+      "training_rows": 4383,
+      "validation_rows": 263,
+      "validation_start": "2019-10-10T00:00:00",
+      "latest_training_kickoff": "2019-11-10T04:00:00",
+      "selected_iterations": [
+        70,
+        203
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-12-14T20:00:00",
+      "prior_coefficients": [
+        3.2772661937124794,
+        0.1073441866284614,
+        1.7638091231649837,
+        -0.19074354863504836
+      ],
+      "training_rows": 4566,
+      "validation_rows": 275,
+      "validation_start": "2019-11-02T16:00:00",
+      "latest_training_kickoff": "2019-12-08T01:00:00",
+      "selected_iterations": [
+        71,
+        65
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2019,
+      "season_type": "regular",
+      "cutoff": "2019-12-14T20:00:00",
+      "prior_coefficients": [
+        3.2772661937124794,
+        0.1073441866284614,
+        1.7638091231649837,
+        -0.19074354863504836
+      ],
+      "training_rows": 4566,
+      "validation_rows": 275,
+      "validation_start": "2019-11-02T16:00:00",
+      "latest_training_kickoff": "2019-12-08T01:00:00",
+      "selected_iterations": [
+        71,
+        65
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2019,
+      "season_type": "postseason",
+      "cutoff": "2019-12-20T19:00:00",
+      "prior_coefficients": [
+        3.281453485746864,
+        0.10664256115440526,
+        1.76365981467353,
+        -0.18961249814173112
+      ],
+      "training_rows": 4567,
+      "validation_rows": 276,
+      "validation_start": "2019-11-02T16:00:00",
+      "latest_training_kickoff": "2019-12-14T20:00:00",
+      "selected_iterations": [
+        71,
+        63
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2019,
+      "season_type": "postseason",
+      "cutoff": "2019-12-20T19:00:00",
+      "prior_coefficients": [
+        3.281453485746864,
+        0.10664256115440526,
+        1.76365981467353,
+        -0.18961249814173112
+      ],
+      "training_rows": 4567,
+      "validation_rows": 276,
+      "validation_start": "2019-11-02T16:00:00",
+      "latest_training_kickoff": "2019-12-14T20:00:00",
+      "selected_iterations": [
+        71,
+        63
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2019,
+      "season_type": "postseason",
+      "cutoff": "2020-01-14T01:00:00",
+      "prior_coefficients": [
+        3.2832767818209336,
+        0.10346625946395502,
+        1.767740186214157,
+        -0.18960858952293366
+      ],
+      "training_rows": 4606,
+      "validation_rows": 277,
+      "validation_start": "2019-11-03T00:00:00",
+      "latest_training_kickoff": "2020-01-07T00:30:00",
+      "selected_iterations": [
+        44,
+        91
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2019,
+      "season_type": "postseason",
+      "cutoff": "2020-01-14T01:00:00",
+      "prior_coefficients": [
+        3.2832767818209336,
+        0.10346625946395502,
+        1.767740186214157,
+        -0.18960858952293366
+      ],
+      "training_rows": 4606,
+      "validation_rows": 277,
+      "validation_start": "2019-11-03T00:00:00",
+      "latest_training_kickoff": "2020-01-07T00:30:00",
+      "selected_iterations": [
+        44,
+        91
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-09-04T01:00:00",
+      "prior_coefficients": [
+        3.288039726008103,
+        0.10341759381271987,
+        1.7669871873002707,
+        -0.1892389145565399
+      ],
+      "training_rows": 4607,
+      "validation_rows": 277,
+      "validation_start": "2019-11-03T01:00:00",
+      "latest_training_kickoff": "2020-01-14T01:00:00",
+      "selected_iterations": [
+        106,
+        63
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-09-04T01:00:00",
+      "prior_coefficients": [
+        3.288039726008103,
+        0.10341759381271987,
+        1.7669871873002707,
+        -0.1892389145565399
+      ],
+      "training_rows": 4607,
+      "validation_rows": 277,
+      "validation_start": "2019-11-03T01:00:00",
+      "latest_training_kickoff": "2020-01-14T01:00:00",
+      "selected_iterations": [
+        106,
+        63
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-10-03T01:00:00",
+      "prior_coefficients": [
+        3.2392341129195388,
+        0.10832176680564971,
+        1.7676490498954252,
+        -0.1926175607410353
+      ],
+      "training_rows": 4668,
+      "validation_rows": 281,
+      "validation_start": "2019-11-15T00:00:00",
+      "latest_training_kickoff": "2020-09-27T02:15:00",
+      "selected_iterations": [
+        19,
+        62
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-10-03T01:00:00",
+      "prior_coefficients": [
+        3.2392341129195388,
+        0.10832176680564971,
+        1.7676490498954252,
+        -0.1926175607410353
+      ],
+      "training_rows": 4668,
+      "validation_rows": 281,
+      "validation_start": "2019-11-15T00:00:00",
+      "latest_training_kickoff": "2020-09-27T02:15:00",
+      "selected_iterations": [
+        19,
+        62
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-10-29T23:30:00",
+      "prior_coefficients": [
+        3.2276450959865253,
+        0.10476169771604409,
+        1.7755625034496552,
+        -0.19491864324715516
+      ],
+      "training_rows": 4794,
+      "validation_rows": 288,
+      "validation_start": "2019-11-29T21:15:00",
+      "latest_training_kickoff": "2020-10-25T02:30:00",
+      "selected_iterations": [
+        15,
+        70
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-10-29T23:30:00",
+      "prior_coefficients": [
+        3.2276450959865253,
+        0.10476169771604409,
+        1.7755625034496552,
+        -0.19491864324715516
+      ],
+      "training_rows": 4794,
+      "validation_rows": 288,
+      "validation_start": "2019-11-29T21:15:00",
+      "latest_training_kickoff": "2020-10-25T02:30:00",
+      "selected_iterations": [
+        15,
+        70
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-11-27T00:00:00",
+      "prior_coefficients": [
+        3.180104963497766,
+        0.09231143781893969,
+        1.7817691885872557,
+        -0.18820744155453845
+      ],
+      "training_rows": 4970,
+      "validation_rows": 301,
+      "validation_start": "2020-10-03T16:00:00",
+      "latest_training_kickoff": "2020-11-22T04:00:00",
+      "selected_iterations": [
+        42,
+        73
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2020,
+      "season_type": "regular",
+      "cutoff": "2020-11-27T00:00:00",
+      "prior_coefficients": [
+        3.180104963497766,
+        0.09231143781893969,
+        1.7817691885872557,
+        -0.18820744155453845
+      ],
+      "training_rows": 4970,
+      "validation_rows": 301,
+      "validation_start": "2020-10-03T16:00:00",
+      "latest_training_kickoff": "2020-11-22T04:00:00",
+      "selected_iterations": [
+        42,
+        73
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2020,
+      "season_type": "postseason",
+      "cutoff": "2020-12-21T19:30:00",
+      "prior_coefficients": [
+        3.116920078538996,
+        0.09278299383284176,
+        1.7901270158634404,
+        -0.19260106326686532
+      ],
+      "training_rows": 5115,
+      "validation_rows": 316,
+      "validation_start": "2020-10-31T16:00:00",
+      "latest_training_kickoff": "2020-12-20T03:30:00",
+      "selected_iterations": [
+        41,
+        118
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2020,
+      "season_type": "postseason",
+      "cutoff": "2020-12-21T19:30:00",
+      "prior_coefficients": [
+        3.116920078538996,
+        0.09278299383284176,
+        1.7901270158634404,
+        -0.19260106326686532
+      ],
+      "training_rows": 5115,
+      "validation_rows": 316,
+      "validation_start": "2020-10-31T16:00:00",
+      "latest_training_kickoff": "2020-12-20T03:30:00",
+      "selected_iterations": [
+        41,
+        118
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-08-28T17:20:00",
+      "prior_coefficients": [
+        3.1138239761319166,
+        0.09028426090065506,
+        1.7910479667976307,
+        -0.19025532264709974
+      ],
+      "training_rows": 5141,
+      "validation_rows": 310,
+      "validation_start": "2020-11-01T00:00:00",
+      "latest_training_kickoff": "2021-01-12T01:00:00",
+      "selected_iterations": [
+        13,
+        73
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-08-28T17:20:00",
+      "prior_coefficients": [
+        3.1124857018090863,
+        0.0941929549959514,
+        1.7650418370540553,
+        -0.17727958309336211
+      ],
+      "training_rows": 4381,
+      "validation_rows": 263,
+      "validation_start": "2020-11-08T00:30:00",
+      "latest_training_kickoff": "2021-01-12T01:00:00",
+      "selected_iterations": [
+        21,
+        68
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-09-23T23:30:00",
+      "prior_coefficients": [
+        3.165677904533114,
+        0.11784413431441128,
+        1.7524642358047768,
+        -0.18314988023722237
+      ],
+      "training_rows": 5288,
+      "validation_rows": 318,
+      "validation_start": "2020-11-27T00:00:00",
+      "latest_training_kickoff": "2021-09-19T04:30:00",
+      "selected_iterations": [
+        85,
+        59
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-09-23T23:30:00",
+      "prior_coefficients": [
+        3.1679519926312802,
+        0.12809883579400544,
+        1.7185629976414651,
+        -0.1771018008507274
+      ],
+      "training_rows": 4528,
+      "validation_rows": 272,
+      "validation_start": "2020-12-05T01:30:00",
+      "latest_training_kickoff": "2021-09-19T04:30:00",
+      "selected_iterations": [
+        52,
+        53
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-10-20T23:30:00",
+      "prior_coefficients": [
+        3.135572836376027,
+        0.11239905130401345,
+        1.7280110722497128,
+        -0.1532626908376402
+      ],
+      "training_rows": 5509,
+      "validation_rows": 331,
+      "validation_start": "2021-09-04T23:30:00",
+      "latest_training_kickoff": "2021-10-17T02:30:00",
+      "selected_iterations": [
+        133,
+        71
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-10-20T23:30:00",
+      "prior_coefficients": [
+        3.135115631068918,
+        0.1194511963096725,
+        1.6921607115740118,
+        -0.13902041333740742
+      ],
+      "training_rows": 4749,
+      "validation_rows": 291,
+      "validation_start": "2021-09-11T23:00:00",
+      "latest_training_kickoff": "2021-10-17T02:30:00",
+      "selected_iterations": [
+        130,
+        80
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-11-17T00:00:00",
+      "prior_coefficients": [
+        3.119351040899638,
+        0.11131605123663761,
+        1.7156990401480725,
+        -0.14952392583572646
+      ],
+      "training_rows": 5734,
+      "validation_rows": 346,
+      "validation_start": "2021-10-02T22:30:00",
+      "latest_training_kickoff": "2021-11-14T03:30:00",
+      "selected_iterations": [
+        22,
+        145
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2021,
+      "season_type": "regular",
+      "cutoff": "2021-11-17T00:00:00",
+      "prior_coefficients": [
+        3.1154238026014207,
+        0.11960874562530996,
+        1.6794599764718305,
+        -0.13735324618118364
+      ],
+      "training_rows": 4974,
+      "validation_rows": 310,
+      "validation_start": "2021-10-09T19:30:00",
+      "latest_training_kickoff": "2021-11-14T03:30:00",
+      "selected_iterations": [
+        25,
+        82
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2021,
+      "season_type": "postseason",
+      "cutoff": "2021-12-17T17:00:00",
+      "prior_coefficients": [
+        3.0642860552463267,
+        0.10112633214286924,
+        1.7089453456365924,
+        -0.1325150412457405
+      ],
+      "training_rows": 5873,
+      "validation_rows": 355,
+      "validation_start": "2021-10-23T16:00:00",
+      "latest_training_kickoff": "2021-12-11T20:00:00",
+      "selected_iterations": [
+        33,
+        119
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2021,
+      "season_type": "postseason",
+      "cutoff": "2021-12-17T17:00:00",
+      "prior_coefficients": [
+        3.05454629733518,
+        0.10630608485996941,
+        1.6738430741569028,
+        -0.11469973230156182
+      ],
+      "training_rows": 5113,
+      "validation_rows": 307,
+      "validation_start": "2021-10-30T16:00:00",
+      "latest_training_kickoff": "2021-12-11T20:00:00",
+      "selected_iterations": [
+        64,
+        81
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2021,
+      "season_type": "postseason",
+      "cutoff": "2022-01-11T01:00:00",
+      "prior_coefficients": [
+        3.0294586030537376,
+        0.09724461156001347,
+        1.6866851278814814,
+        -0.11141671565937049
+      ],
+      "training_rows": 5910,
+      "validation_rows": 356,
+      "validation_start": "2021-10-23T23:30:00",
+      "latest_training_kickoff": "2022-01-05T02:00:00",
+      "selected_iterations": [
+        50,
+        106
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2021,
+      "season_type": "postseason",
+      "cutoff": "2022-01-11T01:00:00",
+      "prior_coefficients": [
+        3.015648692041615,
+        0.10161113684430924,
+        1.648692458608257,
+        -0.0895351152912223
+      ],
+      "training_rows": 5150,
+      "validation_rows": 309,
+      "validation_start": "2021-10-30T23:00:00",
+      "latest_training_kickoff": "2022-01-05T02:00:00",
+      "selected_iterations": [
+        65,
+        67
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-08-27T16:30:00",
+      "prior_coefficients": [
+        3.0266610620882424,
+        0.09700598363785326,
+        1.6877007599011877,
+        -0.11199306214300467
+      ],
+      "training_rows": 5911,
+      "validation_rows": 357,
+      "validation_start": "2021-10-23T23:30:00",
+      "latest_training_kickoff": "2022-01-11T01:00:00",
+      "selected_iterations": [
+        54,
+        106
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-08-27T16:30:00",
+      "prior_coefficients": [
+        3.0319185813552405,
+        0.09302075289558896,
+        1.60031571470657,
+        -0.04165361553324653
+      ],
+      "training_rows": 4386,
+      "validation_rows": 272,
+      "validation_start": "2021-11-06T19:30:00",
+      "latest_training_kickoff": "2022-01-11T01:00:00",
+      "selected_iterations": [
+        67,
+        41
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-09-22T23:30:00",
+      "prior_coefficients": [
+        3.08432288442063,
+        0.11504353273608607,
+        1.6902822058771578,
+        -0.12740343631020246
+      ],
+      "training_rows": 6061,
+      "validation_rows": 366,
+      "validation_start": "2021-11-13T19:00:00",
+      "latest_training_kickoff": "2022-09-18T03:00:00",
+      "selected_iterations": [
+        184,
+        44
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-09-22T23:30:00",
+      "prior_coefficients": [
+        3.1068853585476512,
+        0.11804205100008472,
+        1.6039594846828995,
+        -0.06825698464658829
+      ],
+      "training_rows": 4536,
+      "validation_rows": 275,
+      "validation_start": "2021-11-21T00:30:00",
+      "latest_training_kickoff": "2022-09-18T03:00:00",
+      "selected_iterations": [
+        119,
+        84
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-10-19T23:30:00",
+      "prior_coefficients": [
+        3.0893284545741238,
+        0.10767262050464846,
+        1.6819263549015924,
+        -0.1254438052200071
+      ],
+      "training_rows": 6286,
+      "validation_rows": 378,
+      "validation_start": "2022-01-02T01:45:00",
+      "latest_training_kickoff": "2022-10-16T03:59:00",
+      "selected_iterations": [
+        194,
+        97
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-10-19T23:30:00",
+      "prior_coefficients": [
+        3.110703451325205,
+        0.11107690284005137,
+        1.597427341372875,
+        -0.07131192247738692
+      ],
+      "training_rows": 4761,
+      "validation_rows": 292,
+      "validation_start": "2022-09-10T23:00:00",
+      "latest_training_kickoff": "2022-10-16T03:59:00",
+      "selected_iterations": [
+        50,
+        137
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-11-16T00:00:00",
+      "prior_coefficients": [
+        3.0526412894255053,
+        0.102369491582416,
+        1.6812560130577245,
+        -0.12360196344229775
+      ],
+      "training_rows": 6509,
+      "validation_rows": 391,
+      "validation_start": "2022-09-25T02:30:00",
+      "latest_training_kickoff": "2022-11-13T04:00:00",
+      "selected_iterations": [
+        51,
+        97
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2022,
+      "season_type": "regular",
+      "cutoff": "2022-11-16T00:00:00",
+      "prior_coefficients": [
+        3.061969379561325,
+        0.10479729657029947,
+        1.600976372530379,
+        -0.07194031779074797
+      ],
+      "training_rows": 4984,
+      "validation_rows": 301,
+      "validation_start": "2022-10-08T20:00:00",
+      "latest_training_kickoff": "2022-11-13T04:00:00",
+      "selected_iterations": [
+        72,
+        106
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2022,
+      "season_type": "postseason",
+      "cutoff": "2022-12-16T16:30:00",
+      "prior_coefficients": [
+        3.0160303099034818,
+        0.09872269982249812,
+        1.664455985918185,
+        -0.1157602713269397
+      ],
+      "training_rows": 6645,
+      "validation_rows": 405,
+      "validation_start": "2022-10-15T16:00:00",
+      "latest_training_kickoff": "2022-12-10T20:00:00",
+      "selected_iterations": [
+        61,
+        237
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2022,
+      "season_type": "postseason",
+      "cutoff": "2022-12-16T16:30:00",
+      "prior_coefficients": [
+        3.012699641231046,
+        0.10230198593078323,
+        1.581966311372032,
+        -0.06603543473315317
+      ],
+      "training_rows": 5120,
+      "validation_rows": 309,
+      "validation_start": "2022-10-23T02:30:00",
+      "latest_training_kickoff": "2022-12-10T20:00:00",
+      "selected_iterations": [
+        35,
+        112
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2022,
+      "season_type": "postseason",
+      "cutoff": "2023-01-10T00:30:00",
+      "prior_coefficients": [
+        2.9878399654293033,
+        0.09497907802222733,
+        1.6689913453799832,
+        -0.11616245413711554
+      ],
+      "training_rows": 6686,
+      "validation_rows": 402,
+      "validation_start": "2022-10-16T02:45:00",
+      "latest_training_kickoff": "2023-01-02T22:00:00",
+      "selected_iterations": [
+        88,
+        204
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2022,
+      "season_type": "postseason",
+      "cutoff": "2023-01-10T00:30:00",
+      "prior_coefficients": [
+        2.9763954962641392,
+        0.09735258074402295,
+        1.5891927054267325,
+        -0.06672403674059202
+      ],
+      "training_rows": 5161,
+      "validation_rows": 311,
+      "validation_start": "2022-10-29T23:30:00",
+      "latest_training_kickoff": "2023-01-02T22:00:00",
+      "selected_iterations": [
+        261,
+        133
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-08-26T18:30:00",
+      "prior_coefficients": [
+        2.9918910016770943,
+        0.096059015419438,
+        1.6711597028477876,
+        -0.11863583570801697
+      ],
+      "training_rows": 6687,
+      "validation_rows": 402,
+      "validation_start": "2022-10-16T03:59:00",
+      "latest_training_kickoff": "2023-01-10T00:30:00",
+      "selected_iterations": [
+        72,
+        166
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-08-26T18:30:00",
+      "prior_coefficients": [
+        2.9030631170336756,
+        0.09310279437154988,
+        1.6619107489591323,
+        -0.12114166156634469
+      ],
+      "training_rows": 4402,
+      "validation_rows": 265,
+      "validation_start": "2022-11-05T20:00:00",
+      "latest_training_kickoff": "2023-01-10T00:30:00",
+      "selected_iterations": [
+        87,
+        196
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-09-21T23:30:00",
+      "prior_coefficients": [
+        3.050797331288184,
+        0.11457092908141958,
+        1.663517790563177,
+        -0.13103243888855068
+      ],
+      "training_rows": 6840,
+      "validation_rows": 412,
+      "validation_start": "2022-11-05T23:00:00",
+      "latest_training_kickoff": "2023-09-17T03:00:00",
+      "selected_iterations": [
+        69,
+        94
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-09-21T23:30:00",
+      "prior_coefficients": [
+        2.9919090286235495,
+        0.1225478595596558,
+        1.6468212103535547,
+        -0.14399216424304895
+      ],
+      "training_rows": 4555,
+      "validation_rows": 274,
+      "validation_start": "2022-11-20T02:45:00",
+      "latest_training_kickoff": "2023-09-17T03:00:00",
+      "selected_iterations": [
+        104,
+        73
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-10-17T23:00:00",
+      "prior_coefficients": [
+        3.0228633621610363,
+        0.11684929728236432,
+        1.6684040079519844,
+        -0.13505067565109338
+      ],
+      "training_rows": 7063,
+      "validation_rows": 424,
+      "validation_start": "2022-12-03T21:00:00",
+      "latest_training_kickoff": "2023-10-15T03:00:00",
+      "selected_iterations": [
+        88,
+        40
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-10-17T23:00:00",
+      "prior_coefficients": [
+        2.953252918218801,
+        0.12536205997963856,
+        1.6543749741915346,
+        -0.1495433338420931
+      ],
+      "training_rows": 4778,
+      "validation_rows": 288,
+      "validation_start": "2023-09-09T23:30:00",
+      "latest_training_kickoff": "2023-10-15T03:00:00",
+      "selected_iterations": [
+        61,
+        40
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-11-15T00:00:00",
+      "prior_coefficients": [
+        3.0290970324888202,
+        0.11270518865814214,
+        1.6679335622117673,
+        -0.13590075547798322
+      ],
+      "training_rows": 7297,
+      "validation_rows": 440,
+      "validation_start": "2023-09-23T19:30:00",
+      "latest_training_kickoff": "2023-11-12T04:00:00",
+      "selected_iterations": [
+        18,
+        85
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2023,
+      "season_type": "regular",
+      "cutoff": "2023-11-15T00:00:00",
+      "prior_coefficients": [
+        2.965281004202099,
+        0.12009870964083752,
+        1.6545738631479838,
+        -0.1510706055417801
+      ],
+      "training_rows": 5012,
+      "validation_rows": 303,
+      "validation_start": "2023-10-07T23:00:00",
+      "latest_training_kickoff": "2023-11-12T04:00:00",
+      "selected_iterations": [
+        44,
+        79
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2023,
+      "season_type": "postseason",
+      "cutoff": "2023-12-16T16:00:00",
+      "prior_coefficients": [
+        3.0240861382337427,
+        0.10716482588437565,
+        1.6715510902736335,
+        -0.13328940366552883
+      ],
+      "training_rows": 7437,
+      "validation_rows": 450,
+      "validation_start": "2023-10-07T20:00:00",
+      "latest_training_kickoff": "2023-12-09T20:00:00",
+      "selected_iterations": [
+        39,
+        100
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2023,
+      "season_type": "postseason",
+      "cutoff": "2023-12-16T16:00:00",
+      "prior_coefficients": [
+        2.9600800925228268,
+        0.11139984147768692,
+        1.6612981583491389,
+        -0.14564190120724563
+      ],
+      "training_rows": 5152,
+      "validation_rows": 313,
+      "validation_start": "2023-10-28T16:00:00",
+      "latest_training_kickoff": "2023-12-09T20:00:00",
+      "selected_iterations": [
+        46,
+        153
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2023,
+      "season_type": "postseason",
+      "cutoff": "2024-01-09T00:30:00",
+      "prior_coefficients": [
+        2.993631560817378,
+        0.10778820150475392,
+        1.668931925845689,
+        -0.13465209092152616
+      ],
+      "training_rows": 7478,
+      "validation_rows": 450,
+      "validation_start": "2023-10-14T18:00:00",
+      "latest_training_kickoff": "2024-01-02T01:45:00",
+      "selected_iterations": [
+        87,
+        70
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2023,
+      "season_type": "postseason",
+      "cutoff": "2024-01-09T00:30:00",
+      "prior_coefficients": [
+        2.9161904195317288,
+        0.1131732671248484,
+        1.6572868644171144,
+        -0.14891447210009356
+      ],
+      "training_rows": 5193,
+      "validation_rows": 315,
+      "validation_start": "2023-10-29T00:00:00",
+      "latest_training_kickoff": "2024-01-02T01:45:00",
+      "selected_iterations": [
+        49,
+        68
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-08-24T16:00:00",
+      "prior_coefficients": [
+        2.993986817530272,
+        0.10782168279119302,
+        1.6691692190769272,
+        -0.13486197149157303
+      ],
+      "training_rows": 7479,
+      "validation_rows": 449,
+      "validation_start": "2023-10-14T19:00:00",
+      "latest_training_kickoff": "2024-01-09T00:30:00",
+      "selected_iterations": [
+        97,
+        94
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-08-24T16:00:00",
+      "prior_coefficients": [
+        2.8318037485089853,
+        0.12457108766363385,
+        1.5741165333836922,
+        -0.09904930109167166
+      ],
+      "training_rows": 4418,
+      "validation_rows": 266,
+      "validation_start": "2023-11-04T21:00:00",
+      "latest_training_kickoff": "2024-01-09T00:30:00",
+      "selected_iterations": [
+        69,
+        92
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-09-19T23:30:00",
+      "prior_coefficients": [
+        3.0132923915858556,
+        0.11947763173767834,
+        1.6716760125207821,
+        -0.1470911850354499
+      ],
+      "training_rows": 7619,
+      "validation_rows": 459,
+      "validation_start": "2023-10-28T23:30:00",
+      "latest_training_kickoff": "2024-09-15T02:30:00",
+      "selected_iterations": [
+        193,
+        59
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-09-19T23:30:00",
+      "prior_coefficients": [
+        2.8650774910571406,
+        0.14411604283884863,
+        1.5760947781229377,
+        -0.12119302099099205
+      ],
+      "training_rows": 4558,
+      "validation_rows": 274,
+      "validation_start": "2023-11-18T22:00:00",
+      "latest_training_kickoff": "2024-09-15T02:30:00",
+      "selected_iterations": [
+        67,
+        48
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-10-15T23:30:00",
+      "prior_coefficients": [
+        3.026283764873366,
+        0.11309869770242241,
+        1.6982785695917963,
+        -0.1647734399910824
+      ],
+      "training_rows": 7826,
+      "validation_rows": 470,
+      "validation_start": "2023-11-19T01:00:00",
+      "latest_training_kickoff": "2024-10-13T03:00:00",
+      "selected_iterations": [
+        92,
+        61
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-10-15T23:30:00",
+      "prior_coefficients": [
+        2.8929225374671073,
+        0.13275902149663202,
+        1.628238878960841,
+        -0.15386322293300472
+      ],
+      "training_rows": 4765,
+      "validation_rows": 286,
+      "validation_start": "2024-09-07T20:00:00",
+      "latest_training_kickoff": "2024-10-13T03:00:00",
+      "selected_iterations": [
+        89,
+        35
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-11-13T00:00:00",
+      "prior_coefficients": [
+        3.0534543667383405,
+        0.10811685828187442,
+        1.7112234895958176,
+        -0.1732691072913831
+      ],
+      "training_rows": 8039,
+      "validation_rows": 483,
+      "validation_start": "2024-09-07T23:30:00",
+      "latest_training_kickoff": "2024-11-10T03:30:00",
+      "selected_iterations": [
+        191,
+        67
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-11-13T00:00:00",
+      "prior_coefficients": [
+        2.9434266547147097,
+        0.12366810111753498,
+        1.6555939408817093,
+        -0.16941668462801168
+      ],
+      "training_rows": 4978,
+      "validation_rows": 308,
+      "validation_start": "2024-10-05T16:00:00",
+      "latest_training_kickoff": "2024-11-10T03:30:00",
+      "selected_iterations": [
+        115,
+        93
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-12-14T20:00:00",
+      "prior_coefficients": [
+        3.084755526645117,
+        0.10203702087599814,
+        1.7064937387162356,
+        -0.1658782332548939
+      ],
+      "training_rows": 8230,
+      "validation_rows": 499,
+      "validation_start": "2024-10-05T16:00:00",
+      "latest_training_kickoff": "2024-12-08T01:00:00",
+      "selected_iterations": [
+        63,
+        52
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2024,
+      "season_type": "regular",
+      "cutoff": "2024-12-14T20:00:00",
+      "prior_coefficients": [
+        2.998642263796179,
+        0.11331986723556012,
+        1.651909774888545,
+        -0.157327591687495
+      ],
+      "training_rows": 5169,
+      "validation_rows": 323,
+      "validation_start": "2024-10-26T19:30:00",
+      "latest_training_kickoff": "2024-12-08T01:00:00",
+      "selected_iterations": [
+        80,
+        84
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2024,
+      "season_type": "postseason",
+      "cutoff": "2024-12-15T02:00:00",
+      "prior_coefficients": [
+        3.084755526645117,
+        0.10203702087599814,
+        1.7064937387162356,
+        -0.1658782332548939
+      ],
+      "training_rows": 8230,
+      "validation_rows": 499,
+      "validation_start": "2024-10-05T16:00:00",
+      "latest_training_kickoff": "2024-12-08T01:00:00",
+      "selected_iterations": [
+        63,
+        52
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2024,
+      "season_type": "postseason",
+      "cutoff": "2024-12-15T02:00:00",
+      "prior_coefficients": [
+        2.998642263796179,
+        0.11331986723556012,
+        1.651909774888545,
+        -0.157327591687495
+      ],
+      "training_rows": 5169,
+      "validation_rows": 323,
+      "validation_start": "2024-10-26T19:30:00",
+      "latest_training_kickoff": "2024-12-08T01:00:00",
+      "selected_iterations": [
+        80,
+        84
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2024,
+      "season_type": "postseason",
+      "cutoff": "2025-01-10T00:30:00",
+      "prior_coefficients": [
+        3.0701724802977113,
+        0.100011026002208,
+        1.7024151102509513,
+        -0.1610108629457372
+      ],
+      "training_rows": 8274,
+      "validation_rows": 497,
+      "validation_start": "2024-10-11T00:00:00",
+      "latest_training_kickoff": "2025-01-04T16:00:00",
+      "selected_iterations": [
+        88,
+        70
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2024,
+      "season_type": "postseason",
+      "cutoff": "2025-01-10T00:30:00",
+      "prior_coefficients": [
+        2.9767877985136635,
+        0.11017331198492732,
+        1.6462393620931317,
+        -0.14978171832412807
+      ],
+      "training_rows": 5213,
+      "validation_rows": 313,
+      "validation_start": "2024-11-02T16:45:00",
+      "latest_training_kickoff": "2025-01-04T16:00:00",
+      "selected_iterations": [
+        67,
+        55
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-08-23T16:00:00",
+      "prior_coefficients": [
+        3.0671392296239737,
+        0.10007858484988805,
+        1.7031553511326205,
+        -0.1616302699178976
+      ],
+      "training_rows": 8277,
+      "validation_rows": 497,
+      "validation_start": "2024-10-12T01:00:00",
+      "latest_training_kickoff": "2025-01-21T00:30:00",
+      "selected_iterations": [
+        66,
+        61
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-08-23T16:00:00",
+      "prior_coefficients": [
+        2.9649282465113425,
+        0.10490659607587355,
+        1.6238137677339386,
+        -0.11996593714085678
+      ],
+      "training_rows": 4444,
+      "validation_rows": 267,
+      "validation_start": "2024-11-09T20:30:00",
+      "latest_training_kickoff": "2025-01-21T00:30:00",
+      "selected_iterations": [
+        47,
+        58
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-09-18T23:30:00",
+      "prior_coefficients": [
+        3.1443849998488225,
+        0.11514302535812612,
+        1.7024609824020605,
+        -0.17602139176313172
+      ],
+      "training_rows": 8422,
+      "validation_rows": 515,
+      "validation_start": "2024-10-26T19:30:00",
+      "latest_training_kickoff": "2025-09-14T02:30:00",
+      "selected_iterations": [
+        116,
+        119
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-09-18T23:30:00",
+      "prior_coefficients": [
+        3.1063382293783435,
+        0.13322920014617337,
+        1.6162930479263,
+        -0.14703984021704739
+      ],
+      "training_rows": 4589,
+      "validation_rows": 278,
+      "validation_start": "2024-11-24T00:30:00",
+      "latest_training_kickoff": "2025-09-14T02:30:00",
+      "selected_iterations": [
+        119,
+        71
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-10-14T23:00:00",
+      "prior_coefficients": [
+        3.1834204741192265,
+        0.11413812880923792,
+        1.693016896759317,
+        -0.1660422113651111
+      ],
+      "training_rows": 8629,
+      "validation_rows": 518,
+      "validation_start": "2024-11-23T18:00:00",
+      "latest_training_kickoff": "2025-10-12T03:59:00",
+      "selected_iterations": [
+        88,
+        100
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-10-14T23:00:00",
+      "prior_coefficients": [
+        3.1793110660609125,
+        0.13065176560192815,
+        1.6026282576309026,
+        -0.12975040771724997
+      ],
+      "training_rows": 4796,
+      "validation_rows": 290,
+      "validation_start": "2025-09-06T19:30:00",
+      "latest_training_kickoff": "2025-10-12T03:59:00",
+      "selected_iterations": [
+        90,
+        143
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-11-12T00:30:00",
+      "prior_coefficients": [
+        3.1858123247185577,
+        0.10709879970895632,
+        1.693508298645098,
+        -0.15989283647244124
+      ],
+      "training_rows": 8844,
+      "validation_rows": 534,
+      "validation_start": "2025-08-30T23:30:00",
+      "latest_training_kickoff": "2025-11-09T04:00:00",
+      "selected_iterations": [
+        186,
+        66
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-11-12T00:30:00",
+      "prior_coefficients": [
+        3.1848640438815843,
+        0.1170120041240453,
+        1.6114839328394108,
+        -0.12083815999377183
+      ],
+      "training_rows": 5011,
+      "validation_rows": 301,
+      "validation_start": "2025-10-04T19:30:00",
+      "latest_training_kickoff": "2025-11-09T04:00:00",
+      "selected_iterations": [
+        81,
+        37
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-12-13T20:00:00",
+      "prior_coefficients": [
+        3.177825952138786,
+        0.10020672746441467,
+        1.7038052086750899,
+        -0.15612552415087755
+      ],
+      "training_rows": 9038,
+      "validation_rows": 548,
+      "validation_start": "2025-09-27T19:30:00",
+      "latest_training_kickoff": "2025-12-07T01:00:00",
+      "selected_iterations": [
+        30,
+        108
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2025,
+      "season_type": "regular",
+      "cutoff": "2025-12-13T20:00:00",
+      "prior_coefficients": [
+        3.173034419172273,
+        0.10208508126011713,
+        1.6385350617815029,
+        -0.11417400544729635
+      ],
+      "training_rows": 5205,
+      "validation_rows": 326,
+      "validation_start": "2025-10-25T19:30:00",
+      "latest_training_kickoff": "2025-12-07T01:00:00",
+      "selected_iterations": [
+        56,
+        72
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2025,
+      "season_type": "postseason",
+      "cutoff": "2025-12-14T01:00:00",
+      "prior_coefficients": [
+        3.177825952138786,
+        0.10020672746441467,
+        1.7038052086750899,
+        -0.15612552415087755
+      ],
+      "training_rows": 9038,
+      "validation_rows": 548,
+      "validation_start": "2025-09-27T19:30:00",
+      "latest_training_kickoff": "2025-12-07T01:00:00",
+      "selected_iterations": [
+        30,
+        108
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2025,
+      "season_type": "postseason",
+      "cutoff": "2025-12-14T01:00:00",
+      "prior_coefficients": [
+        3.173034419172273,
+        0.10208508126011713,
+        1.6385350617815029,
+        -0.11417400544729635
+      ],
+      "training_rows": 5205,
+      "validation_rows": 326,
+      "validation_start": "2025-10-25T19:30:00",
+      "latest_training_kickoff": "2025-12-07T01:00:00",
+      "selected_iterations": [
+        56,
+        72
+      ]
+    },
+    {
+      "candidate": "baseline",
+      "season": 2025,
+      "season_type": "postseason",
+      "cutoff": "2026-01-09T00:30:00",
+      "prior_coefficients": [
+        3.1815439677072903,
+        0.10130930735270248,
+        1.7023505917969208,
+        -0.15613073905057104
+      ],
+      "training_rows": 9082,
+      "validation_rows": 553,
+      "validation_start": "2025-10-04T16:00:00",
+      "latest_training_kickoff": "2026-01-03T01:00:00",
+      "selected_iterations": [
+        28,
+        96
+      ]
+    },
+    {
+      "candidate": "recent_six",
+      "season": 2025,
+      "season_type": "postseason",
+      "cutoff": "2026-01-09T00:30:00",
+      "prior_coefficients": [
+        3.1798096071464776,
+        0.10408754934710296,
+        1.6361289620716344,
+        -0.11469904717693548
+      ],
+      "training_rows": 5249,
+      "validation_rows": 317,
+      "validation_start": "2025-11-01T19:30:00",
+      "latest_training_kickoff": "2026-01-03T01:00:00",
+      "selected_iterations": [
+        11,
+        69
+      ]
+    }
+  ]
+}

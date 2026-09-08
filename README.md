@@ -25,6 +25,22 @@ talent and CFBD pregame Elo inputs are retained as supplied by those providers.
 
 ## Evaluation
 
+[Week 1 2026 review](reports/2026-09-08-week1/review.md): the September 5 archive
+went 31/34 on winners and 12–21–1 ATS, with 17.19-point margin MAE versus the
+saved market's 13.92. Two fixed weighting experiments failed historical
+confirmation; production model settings were retained.
+
+Grade an original forecast after refreshing final results, using its saved lines:
+
+```bash
+python -m cfb_model.backtest.grade --forecast data_store/out/runs/20260905T104131379946Z_f2ffde92/predictions.csv --games data_store/games_all.parquet --output reports/2026-09-08-week1
+```
+
+The grader verifies original forecast hashes and pregame issue times, matches
+game IDs and participants, excludes pending games, and uses published ATS
+selections and total deltas to handle rounded columns. It never regenerates
+historical picks from a refitted model.
+
 Same **5,252 FBS-vs-FBS games**, 2019–2025. Baseline is the leakage-corrected
 September 4 audit, restricted to those exact games; final scores are identical.
 

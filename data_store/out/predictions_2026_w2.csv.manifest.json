@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "created_at_utc": "2026-09-08T12:40:47.647636+00:00",
+  "git_commit": "988f4049299a4ca04baa236856f138d85212e9cd",
+  "git_source_dirty": true,
+  "source_sha256": "c0b558c24985a1bf82fe76663d68142b8f6b17e7cb2afcc261a78cd4b75aeebd",
+  "artifact_sha256": "a72021a17773ea519dcf89258abfafe20400b0d16b304c8e47883e77c103524f",
+  "inputs": {
+    "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\features.parquet": "9a9dc50b80a5997d903fb9ecb818b7674a7174bfcfcc7d4d9905422023f414f8",
+    "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\lines_all.parquet": "fc544962f5a219c98635a7fcc3d2748c65dff35f9fc1100c98c7c5f5f22f1da9"
+  },
+  "packages": {
+    "pandas": "2.3.3",
+    "numpy": "2.3.4",
+    "scipy": "1.16.2",
+    "scikit-learn": "1.7.2",
+    "lightgbm": "4.7.0"
+  },
+  "scope": "FBS vs FBS",
+  "issued_at_utc": "2026-09-08T12:40:47.385745+00:00",
+  "data_cutoff_utc": "2026-09-08T12:40:37.499649Z",
+  "training_rows": 9135,
+  "validation_rows": 553,
+  "validation_start": "2025-10-11T16:00:00",
+  "latest_training_kickoff": "2026-09-06T23:30:00",
+  "selected_iterations": [
+    56,
+    136
+  ],
+  "archive": "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\out\\runs\\20260908T124047636305Z_bed5eb6b\\predictions.csv"
+}
