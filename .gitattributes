@@ -1,0 +1,5 @@
+# Preserve original artifact bytes: manifests hash the issued files, including
+# their original line endings. Do not normalize existing LF or CRLF archives.
+data_store/out/**/*.csv -text whitespace=cr-at-eol
+data_store/out/*.csv -text whitespace=cr-at-eol
+reports/**/*.csv -text whitespace=cr-at-eol

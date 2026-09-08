@@ -1,0 +1,510 @@
+{
+  "coverage": {
+    "fbs_week1_games": 51,
+    "current_forecasts": 34,
+    "stats_games": 34
+  },
+  "groups": {
+    "all": {
+      "games": 34,
+      "margin_mae": 17.19411764705882,
+      "total_mae": 13.411764705882355,
+      "winner_accuracy": 0.9117647058823529,
+      "brier": 0.09151623529411765,
+      "games_with_spread": 34,
+      "paired_model_margin_mae": 17.19411764705882,
+      "market_margin_mae": 13.920588235294119,
+      "games_with_total": 34,
+      "paired_model_total_mae": 13.411764705882355,
+      "market_total_mae": 13.088235294117647,
+      "ats": {
+        "wins": 12,
+        "losses": 21,
+        "pushes": 1,
+        "abstentions": 0,
+        "rate": 0.36363636363636365
+      },
+      "over_under": {
+        "wins": 14,
+        "losses": 19,
+        "pushes": 0,
+        "abstentions": 1,
+        "rate": 0.42424242424242425
+      },
+      "forecast_games": 34,
+      "pending": 0,
+      "winner_correct": 31,
+      "margin_bias": -10.552941176470586,
+      "total_bias": 0.32941176470588285,
+      "favorite_margin_bias": -10.652941176470586,
+      "mean_home_ypp": 6.560605039819217,
+      "mean_away_ypp": 4.748126763475654
+    },
+    "market_favorite_21_plus": {
+      "games": 15,
+      "margin_mae": 20.493333333333332,
+      "total_mae": 11.073333333333332,
+      "winner_accuracy": 1.0,
+      "brier": 0.035242199999999994,
+      "games_with_spread": 15,
+      "paired_model_margin_mae": 20.493333333333332,
+      "market_margin_mae": 14.1,
+      "games_with_total": 15,
+      "paired_model_total_mae": 11.073333333333332,
+      "market_total_mae": 11.133333333333333,
+      "ats": {
+        "wins": 5,
+        "losses": 10,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.3333333333333333
+      },
+      "over_under": {
+        "wins": 6,
+        "losses": 8,
+        "pushes": 0,
+        "abstentions": 1,
+        "rate": 0.42857142857142855
+      },
+      "forecast_games": 15,
+      "pending": 0,
+      "winner_correct": 15,
+      "margin_bias": -16.90666666666667,
+      "total_bias": -3.1133333333333324,
+      "favorite_margin_bias": -16.90666666666667,
+      "mean_home_ypp": 7.35031837170591,
+      "mean_away_ypp": 3.939898147604722
+    },
+    "market_favorite_under_21": {
+      "games": 19,
+      "margin_mae": 14.589473684210523,
+      "total_mae": 15.257894736842108,
+      "winner_accuracy": 0.8421052631578947,
+      "brier": 0.1359431052631579,
+      "games_with_spread": 19,
+      "paired_model_margin_mae": 14.589473684210523,
+      "market_margin_mae": 13.77894736842105,
+      "games_with_total": 19,
+      "paired_model_total_mae": 15.257894736842108,
+      "market_total_mae": 14.631578947368421,
+      "ats": {
+        "wins": 7,
+        "losses": 11,
+        "pushes": 1,
+        "abstentions": 0,
+        "rate": 0.3888888888888889
+      },
+      "over_under": {
+        "wins": 8,
+        "losses": 11,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.42105263157894735
+      },
+      "forecast_games": 19,
+      "pending": 0,
+      "winner_correct": 16,
+      "margin_bias": -5.536842105263157,
+      "total_bias": 3.0473684210526315,
+      "favorite_margin_bias": -5.715789473684212,
+      "mean_home_ypp": 5.9371471462244605,
+      "mean_away_ypp": 5.386201986531653
+    },
+    "model_market_gap_7_plus": {
+      "games": 19,
+      "margin_mae": 20.278947368421054,
+      "total_mae": 13.200000000000003,
+      "winner_accuracy": 0.9473684210526315,
+      "brier": 0.07533431578947368,
+      "games_with_spread": 19,
+      "paired_model_margin_mae": 20.278947368421054,
+      "market_margin_mae": 15.105263157894736,
+      "games_with_total": 19,
+      "paired_model_total_mae": 13.200000000000003,
+      "market_total_mae": 13.015789473684212,
+      "ats": {
+        "wins": 7,
+        "losses": 12,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.3684210526315789
+      },
+      "over_under": {
+        "wins": 7,
+        "losses": 11,
+        "pushes": 0,
+        "abstentions": 1,
+        "rate": 0.3888888888888889
+      },
+      "forecast_games": 19,
+      "pending": 0,
+      "winner_correct": 18,
+      "margin_bias": -14.878947368421052,
+      "total_bias": -3.9894736842105254,
+      "favorite_margin_bias": -17.121052631578948,
+      "mean_home_ypp": 7.129153961074083,
+      "mean_away_ypp": 4.390835525710313
+    },
+    "model_market_gap_under_7": {
+      "games": 15,
+      "margin_mae": 13.286666666666665,
+      "total_mae": 13.68,
+      "winner_accuracy": 0.8666666666666667,
+      "brier": 0.11201333333333333,
+      "games_with_spread": 15,
+      "paired_model_margin_mae": 13.286666666666665,
+      "market_margin_mae": 12.42,
+      "games_with_total": 15,
+      "paired_model_total_mae": 13.68,
+      "market_total_mae": 13.18,
+      "ats": {
+        "wins": 5,
+        "losses": 9,
+        "pushes": 1,
+        "abstentions": 0,
+        "rate": 0.35714285714285715
+      },
+      "over_under": {
+        "wins": 7,
+        "losses": 8,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.4666666666666667
+      },
+      "forecast_games": 15,
+      "pending": 0,
+      "winner_correct": 13,
+      "margin_bias": -5.073333333333333,
+      "total_bias": 5.800000000000001,
+      "favorite_margin_bias": -2.46,
+      "mean_home_ypp": 5.84044307289639,
+      "mean_away_ypp": 5.200695664645087
+    },
+    "model_favors_home_ats": {
+      "games": 11,
+      "margin_mae": 9.409090909090908,
+      "total_mae": 17.136363636363637,
+      "winner_accuracy": 0.8181818181818182,
+      "brier": 0.1322631818181818,
+      "games_with_spread": 11,
+      "paired_model_margin_mae": 9.409090909090908,
+      "market_margin_mae": 9.027272727272727,
+      "games_with_total": 11,
+      "paired_model_total_mae": 17.136363636363637,
+      "market_total_mae": 16.781818181818178,
+      "ats": {
+        "wins": 5,
+        "losses": 5,
+        "pushes": 1,
+        "abstentions": 0,
+        "rate": 0.5
+      },
+      "over_under": {
+        "wins": 5,
+        "losses": 6,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.45454545454545453
+      },
+      "forecast_games": 11,
+      "pending": 0,
+      "winner_correct": 9,
+      "margin_bias": 4.336363636363637,
+      "total_bias": 6.845454545454545,
+      "favorite_margin_bias": -2.645454545454545,
+      "mean_home_ypp": 5.476693662057641,
+      "mean_away_ypp": 6.014632942754999
+    },
+    "model_favors_away_ats": {
+      "games": 23,
+      "margin_mae": 20.917391304347827,
+      "total_mae": 11.630434782608699,
+      "winner_accuracy": 0.9565217391304348,
+      "brier": 0.0720285652173913,
+      "games_with_spread": 23,
+      "paired_model_margin_mae": 20.917391304347827,
+      "market_margin_mae": 16.260869565217387,
+      "games_with_total": 23,
+      "paired_model_total_mae": 11.630434782608699,
+      "market_total_mae": 11.321739130434782,
+      "ats": {
+        "wins": 7,
+        "losses": 16,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.30434782608695654
+      },
+      "over_under": {
+        "wins": 9,
+        "losses": 13,
+        "pushes": 0,
+        "abstentions": 1,
+        "rate": 0.4090909090909091
+      },
+      "forecast_games": 23,
+      "pending": 0,
+      "winner_correct": 22,
+      "margin_bias": -17.673913043478258,
+      "total_bias": -2.78695652173913,
+      "favorite_margin_bias": -14.482608695652173,
+      "mean_home_ypp": 7.078997437879101,
+      "mean_away_ypp": 4.1424064168637935
+    },
+    "turnover_difference_0_or_1": {
+      "games": 17,
+      "margin_mae": 19.32941176470588,
+      "total_mae": 14.335294117647058,
+      "winner_accuracy": 0.9411764705882353,
+      "brier": 0.08471017647058823,
+      "games_with_spread": 17,
+      "paired_model_margin_mae": 19.32941176470588,
+      "market_margin_mae": 14.029411764705882,
+      "games_with_total": 17,
+      "paired_model_total_mae": 14.335294117647058,
+      "market_total_mae": 14.176470588235293,
+      "ats": {
+        "wins": 5,
+        "losses": 12,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.29411764705882354
+      },
+      "over_under": {
+        "wins": 7,
+        "losses": 9,
+        "pushes": 0,
+        "abstentions": 1,
+        "rate": 0.4375
+      },
+      "forecast_games": 17,
+      "pending": 0,
+      "winner_correct": 16,
+      "margin_bias": -13.211764705882354,
+      "total_bias": -0.12352941176470512,
+      "favorite_margin_bias": -10.447058823529414,
+      "mean_home_ypp": 6.9254584742439755,
+      "mean_away_ypp": 4.4364841603005924
+    },
+    "turnover_difference_2_plus": {
+      "games": 17,
+      "margin_mae": 15.058823529411764,
+      "total_mae": 12.488235294117645,
+      "winner_accuracy": 0.8823529411764706,
+      "brier": 0.09832229411764705,
+      "games_with_spread": 17,
+      "paired_model_margin_mae": 15.058823529411764,
+      "market_margin_mae": 13.811764705882354,
+      "games_with_total": 17,
+      "paired_model_total_mae": 12.488235294117645,
+      "market_total_mae": 12.0,
+      "ats": {
+        "wins": 7,
+        "losses": 9,
+        "pushes": 1,
+        "abstentions": 0,
+        "rate": 0.4375
+      },
+      "over_under": {
+        "wins": 7,
+        "losses": 10,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.4117647058823529
+      },
+      "forecast_games": 17,
+      "pending": 0,
+      "winner_correct": 15,
+      "margin_bias": -7.894117647058823,
+      "total_bias": 0.7823529411764708,
+      "favorite_margin_bias": -10.858823529411765,
+      "mean_home_ypp": 6.195751605394459,
+      "mean_away_ypp": 5.059769366650716
+    }
+  },
+  "archive_sensitivity": {
+    "20260905T102930653318Z_792c4a29": {
+      "games": 34,
+      "margin_mae": 17.1735294117647,
+      "total_mae": 13.411764705882355,
+      "winner_accuracy": 0.9117647058823529,
+      "brier": 0.09096632352941177,
+      "games_with_spread": 34,
+      "paired_model_margin_mae": 17.1735294117647,
+      "market_margin_mae": 13.920588235294119,
+      "games_with_total": 34,
+      "paired_model_total_mae": 13.411764705882355,
+      "market_total_mae": 13.088235294117647,
+      "ats": {
+        "wins": 12,
+        "losses": 21,
+        "pushes": 1,
+        "abstentions": 0,
+        "rate": 0.36363636363636365
+      },
+      "over_under": {
+        "wins": 14,
+        "losses": 19,
+        "pushes": 0,
+        "abstentions": 1,
+        "rate": 0.42424242424242425
+      },
+      "forecast_games": 34,
+      "pending": 0,
+      "winner_correct": 31,
+      "margin_bias": -10.561764705882352,
+      "total_bias": 0.32941176470588285
+    },
+    "20260905T104131379946Z_f2ffde92": {
+      "games": 34,
+      "margin_mae": 17.19411764705882,
+      "total_mae": 13.411764705882355,
+      "winner_accuracy": 0.9117647058823529,
+      "brier": 0.09151623529411765,
+      "games_with_spread": 34,
+      "paired_model_margin_mae": 17.19411764705882,
+      "market_margin_mae": 13.920588235294119,
+      "games_with_total": 34,
+      "paired_model_total_mae": 13.411764705882355,
+      "market_total_mae": 13.088235294117647,
+      "ats": {
+        "wins": 12,
+        "losses": 21,
+        "pushes": 1,
+        "abstentions": 0,
+        "rate": 0.36363636363636365
+      },
+      "over_under": {
+        "wins": 14,
+        "losses": 19,
+        "pushes": 0,
+        "abstentions": 1,
+        "rate": 0.42424242424242425
+      },
+      "forecast_games": 34,
+      "pending": 0,
+      "winner_correct": 31,
+      "margin_bias": -10.552941176470586,
+      "total_bias": 0.32941176470588285
+    }
+  },
+  "legacy": {
+    "all_legacy": {
+      "games": 99,
+      "margin_mae": 16.619191919191916,
+      "total_mae": 12.431313131313132,
+      "winner_accuracy": 0.8484848484848485,
+      "brier": 0.10145468686868686,
+      "games_with_spread": 98,
+      "paired_model_margin_mae": 16.678571428571427,
+      "market_margin_mae": 14.042857142857143,
+      "games_with_total": 95,
+      "paired_model_total_mae": 12.185263157894738,
+      "market_total_mae": 11.586315789473685,
+      "ats": {
+        "wins": 43,
+        "losses": 55,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.4387755102040816
+      },
+      "over_under": {
+        "wins": 48,
+        "losses": 47,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.5052631578947369
+      },
+      "forecast_games": 99,
+      "pending": 0,
+      "winner_correct": 84,
+      "margin_bias": -3.7868686868686865,
+      "total_bias": 0.11010101010101016
+    },
+    "fbs_only_legacy": {
+      "games": 51,
+      "margin_mae": 16.331372549019605,
+      "total_mae": 12.339215686274509,
+      "winner_accuracy": 0.7647058823529411,
+      "brier": 0.1438911176470588,
+      "games_with_spread": 51,
+      "paired_model_margin_mae": 16.331372549019605,
+      "market_margin_mae": 13.601960784313727,
+      "games_with_total": 51,
+      "paired_model_total_mae": 12.339215686274509,
+      "market_total_mae": 11.543137254901962,
+      "ats": {
+        "wins": 21,
+        "losses": 30,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.4117647058823529
+      },
+      "over_under": {
+        "wins": 24,
+        "losses": 27,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.47058823529411764
+      },
+      "forecast_games": 51,
+      "pending": 0,
+      "winner_correct": 39,
+      "margin_bias": -2.2607843137254906,
+      "total_bias": 1.394117647058824
+    },
+    "same_34_legacy": {
+      "games": 34,
+      "margin_mae": 16.038235294117644,
+      "total_mae": 13.711764705882352,
+      "winner_accuracy": 0.8823529411764706,
+      "brier": 0.08259541176470589,
+      "games_with_spread": 34,
+      "paired_model_margin_mae": 16.038235294117644,
+      "market_margin_mae": 13.823529411764707,
+      "games_with_total": 34,
+      "paired_model_total_mae": 13.711764705882352,
+      "market_total_mae": 13.097058823529412,
+      "ats": {
+        "wins": 13,
+        "losses": 21,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.38235294117647056
+      },
+      "over_under": {
+        "wins": 17,
+        "losses": 17,
+        "pushes": 0,
+        "abstentions": 0,
+        "rate": 0.5
+      },
+      "forecast_games": 34,
+      "pending": 0,
+      "winner_correct": 30,
+      "margin_bias": -5.167647058823529,
+      "total_bias": -0.32352941176470545
+    },
+    "caveat": "Older model; no issue-time manifest. Never combine with current model record."
+  },
+  "uncertainty": {
+    "ats_wilson_95": [
+      0.22187178235242355,
+      0.533838216977336
+    ],
+    "paired_margin_mae_minus_market": 3.2735294117647062,
+    "paired_game_bootstrap_95": [
+      0.27352941176470624,
+      6.053088235294116
+    ],
+    "caveat": "One slate; game bootstrap ignores dependence and is descriptive."
+  },
+  "score_bias": {
+    "home": -5.114705882352942,
+    "away": 5.435294117647059
+  },
+  "input_hashes": {
+    "data_store\\out\\runs\\20260905T104131379946Z_f2ffde92\\predictions.csv": "2aa1fba10176bec2df20d556e322f9cacee0e9c08d7d829fa585b24e28b7ba14",
+    "data_store/games_all.parquet": "67050239af6e78f41fbaaa23c473b9db6b0998efcb2061c2f91dd50ce02844cd",
+    "data_store/stats_all.parquet": "3a25da81d6111032d99a7e8133498447b6057abcdc0bf9787d64e2c11090887e"
+  }
+}

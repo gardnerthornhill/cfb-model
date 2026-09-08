@@ -1,0 +1,52 @@
+{
+  "archive_cutoff_reconstruction": {
+    "cutoff_utc": "2026-09-05T10:41:24.816679+00:00",
+    "training_rows": 9097,
+    "validation_rows": 554,
+    "validation_start": "2025-10-04T19:30:00",
+    "latest_training_kickoff": "2026-09-04T01:00:00",
+    "selected_iterations": [
+      26,
+      110
+    ],
+    "linear_weights": {
+      "intercept_points": 3.1861196289717175,
+      "sp_diff": 0.10035555887395874,
+      "ridge_diff": 1.7074832673398241,
+      "elo_diff_divided_by_12": -0.16009786505144344
+    },
+    "max_margin_difference_from_archive": 1.490660785607588
+  },
+  "after_week1": {
+    "cutoff_utc": "2026-09-08T12:40:19.835904+00:00",
+    "training_rows": 9135,
+    "validation_rows": 553,
+    "validation_start": "2025-10-11T16:00:00",
+    "latest_training_kickoff": "2026-09-06T23:30:00",
+    "selected_iterations": [
+      56,
+      136
+    ],
+    "linear_weights": {
+      "intercept_points": 3.232620166247221,
+      "sp_diff": 0.10823374780439167,
+      "ridge_diff": 1.7032558977156336,
+      "elo_diff_divided_by_12": -0.16402799099282903
+    },
+    "source": {
+      "git_commit": "988f4049299a4ca04baa236856f138d85212e9cd",
+      "git_source_dirty": true,
+      "source_sha256": "c0b558c24985a1bf82fe76663d68142b8f6b17e7cb2afcc261a78cd4b75aeebd"
+    },
+    "inputs": {
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\games_fbs.parquet": "8ee2e5f4d5ecbbd6ecfb74cb00e54236f080e9b846634fa0d1395459870daaad",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\games_all.parquet": "67050239af6e78f41fbaaa23c473b9db6b0998efcb2061c2f91dd50ce02844cd",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\stats_all.parquet": "3a25da81d6111032d99a7e8133498447b6057abcdc0bf9787d64e2c11090887e",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\teams.parquet": "044cf44d88c3ca07b05489387ba20bd35dd152386f96a92ef232e4ea8b54ac51",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\talent_all.parquet": "b1655727531e0c3b9c7983463ce564a3203c3f41ba0fca381423b5a6a069422b",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\sp_all.parquet": "36655e7180a40c7c1bdfb63369469369c91a063a4ecd4464721c2448d3d51018",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\venues.parquet": "bcc48176e81ccf3e219d597464b5dff2cbf587e5b5af590869a81fe322becaff",
+      "C:\\Users\\gardn\\Desktop\\cfb-model\\data_store\\source_snapshot.json": "034a05fabe64c4975fcf3e2d13716ed1d18d45a9592e16db40fa94853933e90d"
+    }
+  }
+}
